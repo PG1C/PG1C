@@ -36,7 +36,7 @@ begin
   execute statement; 
 exception when others then  
   v_exception := format(E'PG1C-8107 Ошибка при изменении метаданных для таблицы 1C %s: [%s] %s\nSQL statement: %s', quote_literal(table_1c), SQLSTATE, SQLERRM, statement);
-  perform dblink_exec(pg1c.log_dblink(),'update pg1c.log_metadata set exception='||quote_literal(v_exception)||' where id='||v_log_id); 
+  perform dblink_exec(pg1c.log_dblink(),'update pg1c.log_metadata_sql set exception='||quote_literal(v_exception)||' where id='||v_log_id); 
   raise exception using
     errcode = 'S8107',
     message = v_exception,
@@ -49,11 +49,11 @@ begin
   return null;
 end; $$;
 
-create or replace procedure pg1c.log_http_request(timestamp_ timestamptz, server_1c varchar, uri varchar, exception text) language plpgsql as $$
+create or replace procedure pg1c.log_http_request(timestamp_ timestamptz, server_1c varchar, urn varchar, exception text) language plpgsql as $$
 declare
   v_log_id bigint;
   v_timestamp varchar := quote_literal(timestamp_::text)||'::timestamptz';
-  v_url varchar := pg1c.build_http_url(uri,server_1c,true);
+  v_url varchar := pg1c.http_url(urn,server_1c,true);
 begin
   v_log_id := (
     select id from dblink(pg1c.log_dblink(),

@@ -33,9 +33,9 @@ extern int no_such_variable
 		memcpy(chars, VARDATA(param), len); chars[len] = 0;           \
 	} while(0);
 
-PG_FUNCTION_INFO_V1(execute_http_request);
+PG_FUNCTION_INFO_V1(http_request);
 Datum
-execute_http_request(PG_FUNCTION_ARGS)
+http_request(PG_FUNCTION_ARGS)
 {
 	char address[32];       GETARG_CHARS   (address,      0);
 	int  port             = PG_GETARG_INT32(              1);
@@ -60,9 +60,9 @@ execute_http_request(PG_FUNCTION_ARGS)
 	PG_RETURN_BYTEA_P(data_bytea);
 }
 
-PG_FUNCTION_INFO_V1(resolve_address_pg1c);
+PG_FUNCTION_INFO_V1(address_pg1c_org);
 Datum
-resolve_address_pg1c(PG_FUNCTION_ARGS)
+address_pg1c_org(PG_FUNCTION_ARGS)
 {
 	size_t address_size = 64;
 	bytea *address_bytea = palloc(VARHDRSZ+address_size+32);

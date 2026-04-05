@@ -394,7 +394,7 @@ create table if not exists pg1c.log_http_request(
   exception text
 );
 
-create or replace function pg1c.build_http_url(uri varchar default null, server_1c varchar default 'DEFAULT', mask_password boolean default false) returns varchar language plpgsql as $func$
+create or replace function pg1c.http_url(urn varchar default '$metadata', server_1c varchar default 'DEFAULT', mask_password boolean default false) returns varchar language plpgsql as $func$
 declare
   v_server_1c pg1c.server_1c := pg1c.server_1c(server_1c);
   v_auth varchar;
@@ -406,28 +406,28 @@ begin
     end if; 
   end if;
   if v_server_1c.auth_expression then
-    execute format( $$ select %s||':'||%s $$,
+    execute format( $$ select %s||':'||%s||'@' $$,
                     case when v_server_1c.user_1c!=''     then v_server_1c.user_1c     else $$ '' $$ end,
                     case when v_server_1c.password_1c!='' then v_server_1c.password_1c else $$ '' $$ end)  
       into v_auth;
   else
-    v_auth := case when v_server_1c.user_1c!='' then v_server_1c.user_1c||':'||v_server_1c.password_1c else '' end;
+    v_auth := case when v_server_1c.user_1c!='' then v_server_1c.user_1c||':'||v_server_1c.password_1c||'@' else '' end;
   end if;
-  return 'http://'||v_auth||host(v_server_1c.web_address)||':'||v_server_1c.web_port||coalesce(uri,'/'||v_server_1c.publication||'/odata/standard.odata/$metadata');
+  return 'http://'||v_auth||host(v_server_1c.web_address)||':'||v_server_1c.web_port||'/'||v_server_1c.publication||'/odata/standard.odata/'||urn;
 end; $func$;
 
-create or replace procedure pg1c.log_http_request(timestamp_ timestamptz, server_1c varchar, uri varchar, exception text) language plpgsql as $$
+create or replace procedure pg1c.log_http_request(timestamp_ timestamptz, server_1c varchar, urn varchar, exception text) language plpgsql as $$
 begin
   if exception is not null then
     return;
   end if;
   insert into pg1c.log_http_request(timestamp,duration,server_1c,url,transaction_fixed)
-    values (timestamp_,clock_timestamp()-timestamp_,log_http_request.server_1c,pg1c.build_http_url(uri,log_http_request.server_1c,true),true);	
+    values (timestamp_,clock_timestamp()-timestamp_,log_http_request.server_1c,pg1c.http_url(urn,log_http_request.server_1c,true),true);	
 end; $$;
 
-create or replace function pg1c.execute_http_request(address bytea, port int4, auth bytea, uri bytea, content_type bytea, memory_buffer_mb int4) returns bytea as '$libdir/pg1c' language c strict;
+create or replace function pg1c.http_request(address bytea, port int4, auth bytea, uri bytea, content_type bytea, memory_buffer_mb int4) returns bytea as '$libdir/pg1c' language c strict;
 
-create or replace function pg1c.execute_http_request(server_1c varchar, uri_suffix varchar, content_type varchar default 'application/json') returns text language plpgsql security definer as $body$
+create or replace function pg1c.http_request(server_1c varchar, urn varchar, content_type varchar default 'application/json') returns text language plpgsql security definer as $body$
 declare
   v_server_1c pg1c.server_1c := pg1c.server_1c(server_1c);
   v_auth varchar := ''; 
@@ -443,9 +443,9 @@ begin
   else
     v_auth := case when v_server_1c.user_1c!='' then v_server_1c.user_1c||':'||v_server_1c.password_1c else '' end;
   end if;
-  v_uri := replace('/'||v_server_1c.publication||'/'||uri_suffix,' ','%20');  
+  v_uri := replace('/'||v_server_1c.publication||'/odata/standard.odata/'||urn,' ','%20');  
   v_response := convert_from(
-    pg1c.execute_http_request(
+    pg1c.http_request(
       host(v_server_1c.web_address)::bytea, 
       v_server_1c.web_port,
       encode(convert_to(v_auth,'UTF-8'),'base64')::bytea, 
@@ -463,10 +463,10 @@ begin
   if left(v_response,1)!='0' then
     raise exception using errcode = 'S'||substring(v_response,8,4),message = substring(v_response,3);
   end if;
-  call pg1c.log_http_request(v_timestamp,server_1c,v_uri,null);
+  call pg1c.log_http_request(v_timestamp,server_1c,urn,null);
   return substring(v_response,3); 
 exception when others then
-  call pg1c.log_http_request(v_timestamp,server_1c,v_uri,format('[%s] %s',sqlstate,sqlerrm));
+  call pg1c.log_http_request(v_timestamp,server_1c,urn,format('[%s] %s',sqlstate,sqlerrm));
   raise exception using errcode=sqlstate,message=sqlerrm;
 end; $body$;
 
@@ -518,7 +518,7 @@ begin
     alter table pg1c_metadata_xml_enum_type add unique (name);
   end if;
   insert into pg1c_metadata_xml_server_1c values (server_1c.id);
-  v_metadata_text := pg1c.execute_http_request(server_1c.id, 'odata/standard.odata/$metadata', 'application/xml');  
+  v_metadata_text := pg1c.http_request(server_1c.id, '$metadata', 'application/xml');  
   v_metadata_text := regexp_replace(v_metadata_text, '(.*?)(<edmx:Edmx.*?<Schema.*?>)(.*)', '\1<Schema xmlns:m="void">\3', 'g'); -- remove namespaces
   v_metadata_text := regexp_replace(v_metadata_text, '(.*)(<\/Schema>)(.*)',                '\1</Schema>',                 'g');
   v_metadata_text := pg1c.xml_utf8_encode(v_metadata_text);
@@ -581,7 +581,7 @@ begin
   call pg1c.check_updates(server_1c);
 end; $$;
 
-create or replace function pg1c.resolve_address_pg1c() returns bytea as '$libdir/pg1c' language c strict;
+create or replace function pg1c.address_pg1c_org() returns bytea as '$libdir/pg1c' language c strict;
 
 create or replace procedure pg1c.check_updates(server_1c pg1c.server_1c) language plpgsql security definer as $$
 declare
@@ -593,9 +593,9 @@ begin
     return;
   end if; 
   update pg1c.server_1c set check_updates_timestamp=clock_timestamp() where id=check_updates.server_1c.id; 
-  v_address := pg1c.resolve_address_pg1c();
+  v_address := pg1c.pg1c.address_pg1c_org();
   if v_address is null then return; end if;
-  v_response := convert_from(pg1c.execute_http_request(v_address, 80, ''::bytea, '/files/version.txt#PG1C'::bytea, 'text/html'::bytea, 1), 'UTF-8');
+  v_response := convert_from(pg1c.http_request(v_address, 80, ''::bytea, '/files/version.txt#PG1C'::bytea, 'text/html'::bytea, 1), 'UTF-8');
   if left(v_response,1)!='0' then return; end if;
   v_version := substring(v_response,3,4);
   if pg1c.version()<v_version then
@@ -1080,7 +1080,7 @@ begin
     '  v_refresh_data_timestamp := clock_timestamp();'||v_newline||   
     '  --'||v_newline||
     '  loop'||v_newline||
-    '    v_response := pg1c.execute_http_request('||quote_literal(metadata_table.server_1c)||',''odata/standard.odata/'||metadata_table.name_metadata||'?'||
+    '    v_response := pg1c.http_request('||quote_literal(metadata_table.server_1c)||','''||metadata_table.name_metadata||'?'||
     case when coalesce(array_length(metadata_table.columns_sort,1),0)!=0 then     
       '$orderby='||pg1c.columns_to_text(metadata_table.columns,metadata_table.columns_sort,expression => $$ col.name_1c $$)||'&'
     else
@@ -1158,7 +1158,7 @@ begin
     '  lock table '||metadata_table.schema||'.'||metadata_table.name_pg||' in share mode;'||v_newline||    
     '  perform pg_advisory_xact_lock('||quote_literal(metadata_table.schema||'.'||metadata_table.name_pg)||'::regclass::oid::int,'||
     'hashtext('||pg1c.columns_to_text(metadata_table.columns,metadata_table.columns_pkey,null,$$ col.name_pg||'::text' $$,'||'''',''''||')||'));'||v_newline||    
-    '  v_response := pg1c.execute_http_request('||quote_literal(metadata_table.server_1c)||',''odata/standard.odata/'||metadata_table.name_metadata||
+    '  v_response := pg1c.http_request('||quote_literal(metadata_table.server_1c)||','''||metadata_table.name_metadata||
     case when metadata_table.type!='Constant' then
       '?$filter='||pg1c.columns_to_text(metadata_table.columns,metadata_table.columns_pkey,null,$$ 
         col.name_1c||' eq '||
@@ -1400,13 +1400,13 @@ begin
   end if;
 end; $$;
 
-create or replace function pg1c.load_metadata_tables(server_1c varchar default 'DEFAULT') returns table(table_1c varchar) security definer language plpgsql as $$
+create or replace function pg1c.metadata_tables(server_1c varchar default 'DEFAULT') returns table(table_1c varchar) security definer language plpgsql as $$
 begin
   call pg1c.load_metadata_xml(pg1c.server_1c(server_1c));
   return query
-    select regexp_replace(et.table_1c, '(.*)_RecordType$', '\1')::varchar from pg1c_metadata_xml_entity_type et where root and et.server_1c=load_metadata_tables.server_1c
+    select regexp_replace(et.table_1c, '(.*)_RecordType$', '\1')::varchar from pg1c_metadata_xml_entity_type et where root and et.server_1c=metadata_tables.server_1c
     union all
-    select et.table_1c from pg1c_metadata_xml_enum_type et where et.server_1c=load_metadata_tables.server_1c;
+    select et.table_1c from pg1c_metadata_xml_enum_type et where et.server_1c=metadata_tables.server_1c;
 end; $$;
 
 create or replace procedure pg1c.create_table_all(server_1c varchar default 'DEFAULT', commit_tables int default 100) language plpgsql as $$
@@ -1416,7 +1416,7 @@ begin
   call pg1c.lock_server_1c(server_1c);
   v_tables_1c := (
     select array_agg(table_1c order by table_1c)
-      from pg1c.load_metadata_tables(server_1c)
+      from pg1c.metadata_tables(server_1c)
       where table_1c not in (select name_1c from pg1c.table t where t.server_1c=create_table_all.server_1c)  
   );
   for i in 1..coalesce(array_length(v_tables_1c,1),0) loop

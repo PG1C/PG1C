@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="ru/">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+    margin:  0px;
+    padding: 0px;
+    border:  0px; 
+}
+
+html {
+    height: 100%;
+    font: 14px Verdana, Arial, Helvetica, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+div {
+    text-align: justify;	
+}
+
+p {
+    padding: 5px;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+a, a:link, a:active, a:visited {
+   #color: #0000EE;
+   color: #0000DD;
+   #color: red;
+}
+
+.background-header {
+    background: #F7F7FF;
+}
+
+.background-menu {
+    background: #D0E0FF;
+}
+
+.background-menu-line {
+    background: #90A0C0;
+}
+
+.border-color-menu {
+    border-color: #90A0C0;
+}
+
+.color-menu-item {
+    color: #2020A0;
+}
+
+.color-menu-item-selected { 
+    color: #E78C43; 
+}
+
+.background-menu-selected-top { 
+    background: #C8D8E8;
+}
+
+.border-color-div-source-code {
+    border-color: #909090;
+}
+
+.color-source-sql-comment {
+    color: #008000;
+}
+
+.color-source-sql-string {
+    color: #800060;
+}
+
+.color-source-sql-keyword {
+    color: #000080;
+}
+
+.color-source-sql-block-border {
+    color: #DD0000;
+}
+
+.color-source-shell {
+    color: green;
+}
+
+.background-source-shell {
+    background: black;    
+}
+
+.color-source-html-tag {
+    color: #0000CD;
+}
+
+.color-source-html-tag-attrubites {
+    color: #B22222;
+}
+
+.color-source-html-tag-value {
+    color: #008000;
+}
+
+.color-source-html-comment {
+    color: #808080;
+}
+
+.color-source-js-comment {
+    color: #008000;
+}
+
+.color-source-js-keyword {
+    color: #000080;
+}
+
+.color-source-js-string {
+    color: #800060;
+}
+
+.div-page {
+    #border: solid 3px red;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.div-header-middle {
+    #border: solid 3px green;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+	text-align: center;
+}
+
+.div-header-sidebar {
+    #border: solid 3px blue;
+    display: flex;    
+    justify-content: center; 
+    align-items: center;
+    width: 100%;
+} 
+
+.div-content {
+    display: flex;
+    flex-wrap: nowrap;
+    #justify-content: space-evenly; 
+    justify-content: space-between;
+}
+
+.div-content-panel-left {
+    #border: solid 3px green;
+    width:     260px;
+    min-width: 260px;
+    max-width: 260px;
+    float: left;
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 15px;
+} 
+
+.div-content-panel-left > ul > a {
+  text-decoration: none;
+}
+
+.div-content-panel-left > ul > li > a {
+  text-decoration: none;
+}
+
+
+
+.div-content-body {
+    #border: solid 3px blue;
+    padding: 10px 30px 10px 10px;
+    border-left-style: solid;
+    border-left-width: 2px;
+}
+
+.menu-border-top {
+    border-top-style: solid;
+    border-top-width: 2px;
+} 
+
+.menu-border-left {
+    border-left-style: solid;
+    border-left-width: 2px;
+}
+
+.menu-border-right {
+    border-right-style: solid;
+    border-right-width: 2px;
+}
+
+.menu-border-bottom {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+.menu-top-item {
+    text-decoration: none;
+    font-size: larger;
+    white-space: nowrap;
+}
+
+.menu-top-item-selected {
+    font-size: larger;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.menu-panel-left-item {
+    padding-left: 15px;
+    text-decoration: none; 
+    font-size: larger;
+}
+
+.menu-panel-left-item-selected {
+    padding-left: 25px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.nav-static-line {
+    font-size: larger;
+    background: #D0E0FF;
+}
+    
+.nav-static-line > ul {
+    list-style: none;
+    padding: 0px;
+}
+
+.nav-static-line > ul > li {
+    #border: 2px solid red;
+    padding: 0px;
+    float: left;    
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+}
+   
+.nav-static-line .item {
+    padding: 7px;      
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+
+.nav-static-line .item-selected {
+    font-weight: bold;
+}
+
+.nav-mobile {
+    margin: 0 auto;
+	float: left;
+    background: #D0E0FF;
+}
+   
+.nav-mobile ul {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.nav-mobile li li {
+	width: 160px;
+}
+   
+.nav-mobile > ul > li {
+    float: left;
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+}
+
+.nav-mobile-group-root {
+    display: none;
+    position: absolute;
+    top: 100%;
+}
+
+.nav-mobile li:hover > .nav-mobile-group-root {
+    display: block;
+}
+
+.nav-mobile-group-child {
+	display: none;
+	position: absolute;
+	left: 100%;
+	top: 0;
+}
+    
+.nav-mobile li li:hover > .nav-mobile-group-child-1 {
+	display: block;
+}
+
+.nav-mobile li li li:hover > .nav-mobile-group-child-2 {
+	display: block;
+}
+
+.nav-mobile-item {  
+    padding: 6px;    
+    display: block;
+    text-align: left;
+    text-decoration: none;
+    color: #2020A0;	
+}
+
+.nav-mobile-item:hover {
+   background: #2F718E;
+}
+
+
+.ul-articles li {
+    padding-top: 17px;
+}
+
+.div-video-iframe {
+    width: 560px;
+    height: 315px;
+}
+
+.div-source-code {
+    #border: solid 3px red;
+    overflow:scroll;
+    min-width: 95%;
+    max-width: 200px;   
+    border-style: solid;
+    border-width: 1px; 
+    padding: 2px 3px; 
+    font-family: monospace;
+    text-align: left;
+}
+
+.table-source-code {
+    border-collapse: collapse;
+    overflow:scroll;
+    min-width: 95%;
+    max-width: 200px;   
+    vertical-align: middle;
+}
+
+.table-source-code th {
+    border-style: solid;
+    border-width: 1px; 
+    border-collapse: collapse;
+    padding: 3px;
+    font-family: monospace;
+    text-align: center;
+}
+
+.table-source-code td {
+    border-style: solid;
+    border-width: 1px; 
+    border-collapse: collapse;
+    padding: 3px 5px; 
+    font-family: monospace;
+    text-align: left;
+}
+
+.div-download {
+    border-style: solid;
+    border-width: 1px;  
+    text-align: center;
+}
+
+.a-download {
+    text-decoration: none;
+}
+
+.div-documentation-synopsis {
+    #border: solid 3px red;
+    margin-left:    30px;
+    margin-right:    0px; 
+    margin-top:      3px;
+    margin-bottom:   0px;
+}
+
+.div-documentation-desc {
+    #border: solid 3px red;
+    margin-left:    30px;
+    margin-right:  100px; 
+    margin-top:      3px;
+    margin-bottom:   0px;
+}
+
+@media (max-width: 900px) {
+
+    #header-desktop {
+        display: none;
+    }
+
+    #menu-top-line-1 {
+        display: none;
+    }
+
+    .div-content-panel-left {
+        display: none;
+    } 
+
+    .div-content-body {
+        border-left-width: 0px;
+        padding: 5px;
+    }
+
+    .div-video-iframe {
+        width: 370px;
+        height: 210px;
+    }
+
+}
+
+@media not (max-width: 900px) {
+
+    #header-mobile {
+        display: none;
+    }
+
+}
+
+.button-top {
+  display: none; 
+  position: fixed;
+  right: 10px;
+  bottom: 40px;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 5px 8px;
+  border-style: solid; 
+  border-width: 2px;
+}
+
+.button-top-visible {
+  display: block;
+} 
+</style>
+
+
+<title>PG1C | Документация</title>
+	
+</head>
+<body>
+
+<div id="header-desktop" class="div-page background-header menu-border-bottom border-color-menu" style="justify-content: center; padding: 10px;">
+
+  <h1>PG1C | Документация</h1>
+
+</div>
+
+
+<div class='div-page' style='flex: 1; clear:both;'>
+
+  <div class='div-content-panel-left'>
+    
+
+<ul>
+<li><a href="#usage_method">Принцип использования</a></li>
+</ul>
+<br>
+<ul style="list-style-type: none;">
+<li style="list-style-type: disc;"><a href="#examples" style="text-decoration: none;">Примеры</a></li>
+<li><a href="#example-create-tables">    Создание таблиц          </a></li>
+<li><a href="#example-refresh-schedule"> Обновление по расписанию </a></li>
+<li><a href="#example-sql-queries">      SQL-запросы              </a></li>
+<li><a href="#example-foreign-keys">     Внешние ключи            </a></li>
+<li><a href="#example-access">           Доступ                   </a></li>
+<li><a href="#example-views-funcs">      Представления и функции  </a></li>
+</ul>
+<br>
+<ul style="list-style-type: none;">
+<li style="list-style-type: disc;"><a href="#data">Работа с данными</a></li>
+<li><a href="#create_table">     create_table      </a></li>
+<li><a href="#create_table_all"> create_table_all  </a></li>
+<li><a href="#sp_table">         [Таблица]()       </a></li>
+<li><a href="#sp_table_pkey">    [Таблица](Ссылка) </a></li>
+<li><a href="#refresh_data">     refresh_data      </a></li>
+<li><a href="#refresh_data_all"> refresh_data_all  </a></li>
+<li><a href="#refresh_metadata"> refresh_metadata  </a></li>
+<li><a href="#refresh_all">      refresh_all       </a></li>
+<li><a href="#drop_table">       drop_table        </a></li>
+<li><a href="#drop_table_all">   drop_table_all    </a></li>
+</ul>
+<br>
+<ul style="list-style-type: none;">
+<li style="list-style-type: disc;"><a href="#settings">Настройка и информация</a></li>
+<li><a href="#server_1c">       server_1c       </a></li>
+<li><a href="#table">           table           </a></li>
+<li><a href="#metadata_tables"> metadata_tables </a></li>
+<li><a href="#http_url">        http_url        </a></li> 
+<li><a href="#value_any">       value_any       </a></li>
+<li><a href="#version">         version         </a></li>
+</ul>
+<br>
+<ul style="list-style-type: none;">
+<li style="list-style-type: disc;"><a href="#logs">Журналы</a></li>
+<li><a href="#log_metadata_sql"> log_metadata_sql </a></li>
+<li><a href="#log_http_request"> log_http_request </a></li>
+</ul>
+<br>
+<ul>
+<li style="list-style-type: disc;"><a href="#security">Безопасность</a></li>
+</ul>
+
+
+
+
+
+  </div>
+
+  <div class='div-content-body border-content-body border-color-menu'>
+    
+
+<a id="usage_method"></a>
+<p style="font-size:larger;"><b>Принцип использования</b></p>
+<br>
+Перед использованием необходимо выполнить публикацию информационной базы 1С, разрешить доступ по протоколу OData
+и установить расширение <em>pg1c</em>, подробности в разделе Загрузка<br>
+<br>
+<b>1. Создание таблиц</b><br>
+С помощью функций <a href="#create_table">create_table</a> и <a href="#create_table_all">create_table_all</a>
+в базе данных PostgreSQL создаются таблицы, идентичные таблицам 1С (объектам метаданных). 
+<br><br>
+
+<b>2. Обновление данных и метаданных</b><br>
+Рекомендуется настроить автоматическое обновление данных по расписанию,
+используя хранимые процедуры <a href="#refresh_data_all">refresh_data_all</a> и <a href="#refresh_all">refresh_all</a>.
+При настройке расписания не требуется обеспечивать синхронизацию, т.к. при попытке одновременного выполнения указанных функция для одного сервера 1С возникнет исключение.
+Для мониторинга обновления можно использовать информационную таблицу <a href="#table">table</a>.
+<br>
+Альтернативно, можно получать актуальные данные непосредствнно в запросе с помощью функций <a href="#sp_table">[Таблица]()</a> и <a href="#sp_table_pkey">[Таблица](Ссылка)</a>.
+<br><br>
+
+<b>3. Внешние ключи и представления</b><br>
+При использовании таблиц 1С (особенно справочников, констант и перечислений) как части общей схемы данных в PostgreSQL, 
+рекомендуется создать внешние ключи на таблицы. 
+Внешние ключи должны быть отложенными (deferred, т.е. проверяться при выполнении commit),
+т.к. в некоторых случаях при обновлении метаданных (структуры таблиц) возможно полное обновление данных.
+При обновлении метаданных проводится модификация структуры таблицы SQL-командами <em>alter table</em> без пересоздания, это позволяет
+на основе таблиц 1С создавать другие объекты бд: представления, в т.ч. материализованные, партиции, унаследованные таблицы.
+<br><br>
+
+<b>4. Доступ пользователей</b><br>
+Пользователям выдаются права на чтение таблиц и выполнение хранимых процедур получения данных.
+<br><br>
+<b>5. Целевое использование</b><br>
+см. примеры <a href="#example-sql-queries">SQL-запросы</a>, <a href="#example-access">Доступ</a> и <a href="#example-views-funcs">Представления и функции</a>.
+<br><br>
+
+<b>6. Оптимизация</b><br>
+При длительном выполнении SQL-запросов, использующих таблицы 1С, на необходимые поля требуется создать неуникальные индексы.<br>
+<br>
+
+<br>
+
+<a id="examples"></a>
+<div class="color-menu-item-selected background-menu" style="width: 100%; padding-top: 2px; padding-bottom: 2px;">
+<span style="font-weight: bold; margin-left: 3px; margin-right: 3px;">
+Примеры
+</span>
+</div>
+
+<br>
+<a id="example-create-tables"></a>
+<b>Создание таблиц различными способами</b>
+<br>
+<div class="div-source-code border-color-div-source-code" style="height: 282px;">
+<pre><span class="color-source-sql-comment">-- Получаем список доступных таблиц 1С</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.metadata_tables();
+
+<span class="color-source-sql-comment">-- Создаем таблицу</span>
+<span class="color-source-sql-keyword">select</span> pg1c.create_table(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>);
+
+<span class="color-source-sql-comment">-- Создаем таблицу с другими схемой и названием (public.Goods) в PostgreSQL</span>
+<span class="color-source-sql-keyword">select</span> pg1c.create_table(<span class="color-source-sql-string">'Справочник.Товары'</span>, <span class="color-source-sql-keyword">schema</span>=&#62;<span class="color-source-sql-string">'public'</span>, table_name_pg=&#62;<span class="color-source-sql-string">'Goods'</span>);
+
+<span class="color-source-sql-comment">-- Создаем все таблицы</span>
+<span class="color-source-sql-keyword">call</span> pg1c.create_table_all();
+
+<span class="color-source-sql-comment">-- Получаем список всех созданных таблиц</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.<span class="color-source-sql-keyword">table</span>;
+</pre>
+</div>
+<br>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="example-refresh-schedule"></a>
+<b>Варианты расписаний обновления данных и метаданных для ОС Linux</b>
+<br>
+<div class="div-source-code border-color-div-source-code color-source-shell background-source-shell" style="height: 430px;">
+<pre>postgres@debian:~$ crontab -l
+# Вариант 1
+#   ночью полное обновление, включая метаданные
+#   в рабочее время обновление данных: каждый час - полное, каждые 5 минут - быстрое
+#   рекомендуется при использовании всех типов данных (справочники,документы и т.д)
+00      03    * * * psql -d mydb -c "call pg1c.refresh_all()"
+00      08-20 * * * psql -d mydb -c "call pg1c.refresh_data_all()"
+05-55/5 08-20 * * * psql -d mydb -c "call pg1c.refresh_data_all(fast=&#62;true)"
+
+# Вариант 2
+#   с 00:00 до 01:00 полное обновление данных каждые 10 минут
+#   в остальное время быстрое обновление данных каждую минуту
+#   обновление метаданных выполняется вручную после обновлений 1С
+#   рекомендуется при высокой актуальности справочников и констант
+*/10 00    * * * psql -d mydb -c "call pg1c.refresh_data_all()"
+*    01-23 * * * psql -d mydb -c "call pg1c.refresh_data_all(fast=&#62;true)"
+
+# Вариант 3
+#   в 00:00 создание новых доступных таблиц и полное обновление, включая метаданные
+#   в остальное время полное обновление данных каждый час
+#   рекомендуется для аналитических баз данных
+00 00    * * * psql -d mydb -с "call pg1c.create_table_all(commit_tables=&#62;1)" -c "call pg1c.refresh_all()"
+00 01-23 * * * psql -d mydb -c "call pg1c.refresh_data_all()"
+</pre>
+</div>
+<br>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="example-sql-queries"></a>
+<b>SQL-запросы по работе с данными</b>
+<br>
+<div class="div-source-code border-color-div-source-code" style="height: 372px;">
+<pre><span class="color-source-sql-comment">-- Выбираем данные из таблицы,</span>
+<span class="color-source-sql-comment">-- обновление данных выполняется отдельно по расписанию </span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> Справочник.Контрагенты;
+
+<span class="color-source-sql-comment">-- Выбираем данные из табличной части 2 способами:</span>
+<span class="color-source-sql-comment">-- detail-представление</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> Справочник.Контрагенты_КонтактнаяИнформация;
+<span class="color-source-sql-comment">-- поле типа массив master-таблицы</span>
+<span class="color-source-sql-keyword">select</span> КонтактнаяИнформация <span class="color-source-sql-keyword">from</span> Справочник.Контрагенты;
+
+<span class="color-source-sql-comment">-- Обновляем и выбираем данные непосредственно в запросе</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> Справочник.Контрагенты();
+
+<span class="color-source-sql-comment">-- Обновляем только нужные данные и выбираем их 2 способами:</span>
+<span class="color-source-sql-comment">-- соединение</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> myorders m
+  <span class="color-source-sql-keyword">cross</span> <span class="color-source-sql-keyword">join</span> Справочник.Контрагенты(m.partner_id);
+<span class="color-source-sql-comment">-- вызов функции</span>
+<span class="color-source-sql-keyword">select</span> *,(Справочник.Товары(m.ТоварСсылка)).Наименование <span class="color-source-sql-keyword">from</span> myorders m;
+</pre>
+</div>
+<br>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="example-foreign-keys"></a>
+<b>Создание внешних ключей на таблицы, рекомендуется делать отложенными (<em>deferred</em>)</b>
+<br>
+<div class="div-source-code border-color-div-source-code" style="height: 264px;">
+<pre><span class="color-source-sql-comment">-- Создание ключа в момент создания таблицы</span>
+<span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">table</span> myorders(
+  id serial <span class="color-source-sql-keyword">primary</span> <span class="color-source-sql-keyword">key</span>, 
+  partner_id uuid <span class="color-source-sql-keyword">references</span> Справочник.Контрагенты <span class="color-source-sql-keyword">deferrable</span> <span class="color-source-sql-keyword">initially</span> <span class="color-source-sql-keyword">deferred</span>
+);
+
+<span class="color-source-sql-comment">-- Создание ключа для существующей таблицы 2 способами:</span>
+<span class="color-source-sql-comment">-- сокращенное, имя будет сформировано автоматически </span>
+<span class="color-source-sql-keyword">alter</span> <span class="color-source-sql-keyword">table</span> myorders <span class="color-source-sql-keyword">add</span> <span class="color-source-sql-keyword">foreign</span> <span class="color-source-sql-keyword">key</span> (partner_id)
+  <span class="color-source-sql-keyword">references</span> Справочник.Контрагенты <span class="color-source-sql-keyword">deferrable</span> <span class="color-source-sql-keyword">initially</span> <span class="color-source-sql-keyword">deferred</span>;
+<span class="color-source-sql-comment">-- полное с указанием имени и поля первичного ключа</span>
+<span class="color-source-sql-keyword">alter</span> <span class="color-source-sql-keyword">table</span> myorders <span class="color-source-sql-keyword">add</span> <span class="color-source-sql-keyword">constraint</span> myorders_partner_fk <span class="color-source-sql-keyword">foreign</span> <span class="color-source-sql-keyword">key</span> (partner_id)
+  <span class="color-source-sql-keyword">references</span> Справочник.Контрагенты(Ссылка) <span class="color-source-sql-keyword">deferrable</span> <span class="color-source-sql-keyword">initially</span> <span class="color-source-sql-keyword">deferred</span>;
+</pre>
+</div>
+<br>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="example-access"></a>
+<b>Выдача привилегий на таблицы</b>
+<br>
+<div class="div-source-code border-color-div-source-code" style="height: 282px;">
+<pre><span class="color-source-sql-comment">-- Выдача права чтения таблицы пользователю</span>
+<span class="color-source-sql-keyword">grant</span> <span class="color-source-sql-keyword">select</span> <span class="color-source-sql-keyword">on</span> Справочник.Контрагенты <span class="color-source-sql-keyword">to</span> user_1;
+
+<span class="color-source-sql-comment">-- Выдача права обновления таблицы роли</span>
+<span class="color-source-sql-keyword">grant</span> <span class="color-source-sql-keyword">execute</span> <span class="color-source-sql-keyword">on</span> <span class="color-source-sql-keyword">function</span> Справочник.Товары(),Справочник.Товары(uuid) <span class="color-source-sql-keyword">to</span> role_analysts;
+
+<span class="color-source-sql-comment">-- Выдача разработчику права создания внешнего ключа на таблицу</span>
+<span class="color-source-sql-keyword">grant</span> <span class="color-source-sql-keyword">references</span> <span class="color-source-sql-keyword">on</span> <span class="color-source-sql-keyword">table</span> Справочник.Товары <span class="color-source-sql-keyword">to</span> developer_1;
+
+<span class="color-source-sql-comment">-- ! Выдача прав на табличную часть (представление) не рекомендуется,</span>
+<span class="color-source-sql-comment">-- т.к. при обновлении метаданных из-за особенностей PostgreSQL </span>
+<span class="color-source-sql-comment">-- может возникнуть исключение</span>
+<span class="color-source-sql-comment">-- Рекомедуется создать функцию, возвращающую запрос, и выдать права на нее</span>
+<span class="color-source-sql-keyword">grant</span> <span class="color-source-sql-keyword">select</span> <span class="color-source-sql-keyword">on</span> Справочник.Контрагенты_КонтактнаяИнформация <span class="color-source-sql-keyword">to</span> user_1;
+</pre>
+</div>
+<br>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="example-views-funcs"></a>
+<b>Представления и функции с использованием таблиц</b>
+<br>
+<div class="div-source-code border-color-div-source-code" style="height: 350px;">
+<pre><span class="color-source-sql-comment">-- ! Создание представлений с непосредственным использовнием таблиц не рекомендуется,</span>
+<span class="color-source-sql-comment">-- т.к. при обновлении метаданных из-за особенностей PostgreSQL может возникнуть исключение</span>
+<span class="color-source-sql-comment">-- Рекомендуется создавать функции-оберки и использовать их в представлениях, см. ниже</span>
+<span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">or</span> <span class="color-source-sql-keyword">replace</span> <span class="color-source-sql-keyword">view</span> myview1 <span class="color-source-sql-keyword">as</span> 
+  <span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> Справочник.Товары <span class="color-source-sql-keyword">where</span> <span class="color-source-sql-keyword">not</span> ПометкаУдаления; 
+<span class="color-source-sql-keyword">alter</span> <span class="color-source-sql-keyword">table</span> Справочник.Товары ... ; -- ! Возможно исключение при использовании myview1
+
+<span class="color-source-sql-comment">-- Функция на языке SQL, выдача прав пользователю</span>
+<span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">or</span> <span class="color-source-sql-keyword">replace</span> <span class="color-source-sql-keyword">function</span> myquery1()
+  <span class="color-source-sql-keyword">returns</span> <span class="color-source-sql-keyword">setof</span> Справочник.Товары <span class="color-source-sql-keyword">language</span> <span class="color-source-sql-keyword">sql</span> <span class="color-source-sql-keyword">as</span>
+<span class="color-source-sql-block-border">&dollar;&dollar;</span>
+  <span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> Справочник.Товары <span class="color-source-sql-keyword">where</span> <span class="color-source-sql-keyword">not</span> ПометкаУдаления;
+<span class="color-source-sql-block-border">&dollar;&dollar;</span>;
+<span class="color-source-sql-keyword">grant</span> <span class="color-source-sql-keyword">execute</span> <span class="color-source-sql-keyword">on</span> <span class="color-source-sql-keyword">function</span> myquery1 <span class="color-source-sql-keyword">to</span> user_1; 
+
+<span class="color-source-sql-comment">-- Функция на языке plpgsql, которая: обновляет таблицу, </span>
+<span class="color-source-sql-comment">-- создает на ее основе временную таблицу, возвращает SQL-запрос  </span>
+<span class="color-source-sql-comment">-- Определение возвращаемых полей необходимо для возможности</span>
+<span class="color-source-sql-comment">-- использования в представлениях      </span>
+<span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">or</span> <span class="color-source-sql-keyword">replace</span> <span class="color-source-sql-keyword">function</span> myquery2()
+  <span class="color-source-sql-keyword">returns</span> <span class="color-source-sql-keyword">table</span>(Ссылка uuid,ПометкаУдаления <span class="color-source-sql-keyword">boolean</span>) <span class="color-source-sql-keyword">language</span> <span class="color-source-sql-keyword">plpgsql</span> <span class="color-source-sql-keyword">as</span>
+<span class="color-source-sql-block-border">&dollar;&dollar;</span>
+<span class="color-source-sql-keyword">begin</span>
+  <span class="color-source-sql-keyword">perform</span> Справочник.Товары();
+  <span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">temp</span> <span class="color-source-sql-keyword">table</span> temp_myquery2 <span class="color-source-sql-keyword">on</span> <span class="color-source-sql-keyword">commit</span> <span class="color-source-sql-keyword">drop</span> <span class="color-source-sql-keyword">as</span>
+    <span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> Справочник.Товары <span class="color-source-sql-keyword">limit</span> 10;
+  <span class="color-source-sql-keyword">return</span> <span class="color-source-sql-keyword">query</span> <span class="color-source-sql-keyword">select</span> Ссылка,ПометкаУдаления <span class="color-source-sql-keyword">from</span> temp_myquery2;
+<span class="color-source-sql-keyword">end</span> 
+<span class="color-source-sql-block-border">&dollar;&dollar;</span>;
+
+<span class="color-source-sql-comment">-- Функция с параметром и динамическим SQL-запросом</span>
+<span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">or</span> <span class="color-source-sql-keyword">replace</span> <span class="color-source-sql-keyword">function</span> myquery3(lim <span class="color-source-sql-keyword">int</span>)
+  <span class="color-source-sql-keyword">returns</span> <span class="color-source-sql-keyword">table</span>(Ссылка uuid,ПометкаУдаления <span class="color-source-sql-keyword">boolean</span>) <span class="color-source-sql-keyword">language</span> <span class="color-source-sql-keyword">plpgsql</span> <span class="color-source-sql-keyword">as</span>
+<span class="color-source-sql-block-border">&dollar;&dollar;</span>
+<span class="color-source-sql-keyword">begin</span>
+  <span class="color-source-sql-keyword">return</span> <span class="color-source-sql-keyword">query</span>  
+    <span class="color-source-sql-keyword">execute</span> <span class="color-source-sql-block-border">&dollar;SQL&dollar;</span>
+       <span class="color-source-sql-keyword">select</span> Ссылка,ПометкаУдаления <span class="color-source-sql-keyword">from</span> Справочник.Товары <span class="color-source-sql-keyword">limit</span> &dollar;1
+    <span class="color-source-sql-block-border">&dollar;SQL&dollar;</span>
+    <span class="color-source-sql-keyword">using</span> lim;
+<span class="color-source-sql-keyword">end</span> 
+<span class="color-source-sql-block-border">&dollar;&dollar;</span>;
+
+<span class="color-source-sql-comment">-- Создание обычного и материализованного представлений на основе функции</span>
+<span class="color-source-sql-comment">-- Обновление метаданных не приведет к исключению, т.к. нет прямой связи с таблицей</span>
+<span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">or</span> <span class="color-source-sql-keyword">replace</span> <span class="color-source-sql-keyword">view</span> myview2 <span class="color-source-sql-keyword">as</span> <span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> myquery2(); 
+<span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">materialized</span> <span class="color-source-sql-keyword">view</span> myview3 <span class="color-source-sql-keyword">as</span> <span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> myquery3(20);
+<span class="color-source-sql-keyword">refresh</span> <span class="color-source-sql-keyword">materialized</span> <span class="color-source-sql-keyword">view</span> myview3;
+<span class="color-source-sql-keyword">grant</span> <span class="color-source-sql-keyword">select</span> <span class="color-source-sql-keyword">on</span> myview2,myview3 <span class="color-source-sql-keyword">to</span> user_1;
+</pre>
+</div>
+<br>
+
+<br>
+
+<a id="data"></a>
+<div class="color-menu-item-selected background-menu" style="width: 100%; padding-top: 2px; padding-bottom: 2px;">
+<span style="font-weight: bold; margin-left: 3px; margin-right: 3px;">
+Работа с данными
+</span>
+</div>
+
+<br>
+<a id="create_table"></a>
+<p style="font-size:larger;"><b>pg1c.create_table</b>(table_1c, server_1c, schema, table_name_pg)</p>
+<br>
+Для таблицы 1С функция создает в PostgreSQL таблицу и хранимые процедуры, загружает данные, возвращает полное имя созданной таблицы.<br>Если данные загружать не требуется (например, загрузка выполняется по расписанию), нужно вызывать функцию <em>pg1c.create_table_only</em> с аналогичными параметрами
+<br>
+<br>
+Параметры:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">table_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Таблица 1С</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">server_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Сервер 1С (необязательный, по умолчанию DEFAULT)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">schema</td><td style="width: 5px;"></td><td style="white-space: nowrap;">name</td><td style="text-align: center; width: 30px;">-</td><td>Схема создаваемой таблицы в PostgreSQL (необязательный, по умолчанию тип объекта конфигурации 1С)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">table_name_pg</td><td style="width: 5px;"></td><td style="white-space: nowrap;">name</td><td style="text-align: center; width: 30px;">-</td><td>Имя создаваемой таблицы в PostgreSQL (необязательный, по умолчанию имя объекта конфигурации 1С)</td></tr>
+</table>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 174px;">
+<pre><span class="color-source-sql-comment">-- Создаем таблицу</span>
+<span class="color-source-sql-keyword">select</span> pg1c.create_table(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>);
+
+<span class="color-source-sql-comment">-- Создаем таблицу с другими схемой и названием (public.Goods) в PostgreSQL</span>
+<span class="color-source-sql-keyword">select</span> pg1c.create_table(<span class="color-source-sql-string">'Справочник.Товары'</span>, <span class="color-source-sql-keyword">schema</span>=&#62;<span class="color-source-sql-string">'public'</span>, table_name_pg=&#62;<span class="color-source-sql-string">'Goods'</span>);
+
+<span class="color-source-sql-comment">-- Создаем таблицу без загрузки данных для сервера УТ</span>
+<span class="color-source-sql-keyword">select</span> pg1c.create_table_only(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>, <span class="color-source-sql-string">'УТ'</span>);
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="create_table_all"></a>
+<p style="font-size:larger;"><b>pg1c.create_table_all</b>(server_1c, commit_tables)</p>
+<br>
+Процедура создает все таблицы, доступные по протоколу OData (результат функции <a href="#metadata_tables">pg1c.metadata_tables</a>).<br>Ранее созданные таблицы пропускаются. При успешном выполнении в любом случае фиксируется транзакция (<em>commit</em>), необходимо для снятия блокировки с сервера
+<br>
+<br>
+Параметры:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">server_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Сервер 1С (необязательный, по умолчанию DEFAULT)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">commit_tables</td><td style="width: 5px;"></td><td style="white-space: nowrap;">int</td><td style="text-align: center; width: 30px;">-</td><td>Количество таблиц, создаваемых в одной транзакции. Значение <em>null</em> отключает промежуточное фиксирование транзакций (необязательный, по умолчанию 100)</td></tr>
+</table>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 174px;">
+<pre><span class="color-source-sql-comment">-- Создаем все таблицы</span>
+<span class="color-source-sql-keyword">call</span> pg1c.create_table_all();
+
+<span class="color-source-sql-comment">-- Создаем все таблицы для сервера УТ без промежуточного фиксирования транзакций</span>
+<span class="color-source-sql-keyword">call</span> pg1c.create_table_only(<span class="color-source-sql-string">'УТ'</span>, <span class="color-source-sql-keyword">null</span>);
+
+<span class="color-source-sql-comment">-- Получаем список всех созданных таблиц</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.<span class="color-source-sql-keyword">table</span>;
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="sp_table"></a>
+<p style="font-size:larger;"><b>[Таблица]</b>()<b></b></p>
+<br>
+Функция обновляет все данные в одноименной таблице PostgreSQL из соответствующей таблицы 1С и возвращает их.<br> Иными словами, после успешного выполнения содержимое таблицы в PostgreSQL станет идентичным данным из 1С
+<br>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 192px;">
+<pre><span class="color-source-sql-comment">-- Обновляем и выбираем все данные</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> Справочник.Контрагенты();
+
+<span class="color-source-sql-comment">-- Обновляем и используем данные на процедурном языке PL/pgSQL</span>
+<span class="color-source-sql-keyword">do</span> <span class="color-source-sql-block-border">&dollar;&dollar;</span> <span class="color-source-sql-keyword">begin</span>
+  <span class="color-source-sql-keyword">perform</span> Справочник.Контрагенты();
+<span class="color-source-sql-comment">  -- Далее используем актуальные данные</span>
+<span class="color-source-sql-comment">  -- select * from Справочник.Контрагенты,Справочник.Контрагенты_КонтактнаяИнформация;</span>
+<span class="color-source-sql-keyword">end</span> <span class="color-source-sql-block-border">&dollar;&dollar;</span>;
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="sp_table_pkey"></a>
+<p style="font-size:larger;"><b>[Таблица]</b>([primary key])</p>
+<br>
+Функция обновляет данные по первичному ключу (обычно поле Ссылка) в одноименной таблице PostgreSQL из соответствующей таблицы 1С и возвращает их
+<br>
+<br>
+Параметр:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">[primary key]</td><td style="width: 5px;"></td><td style="white-space: nowrap;"> </td><td style="text-align: center; width: 30px;">-</td><td>Значения первичного ключа</td></tr>
+</table>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 300px;">
+<pre><span class="color-source-sql-comment">-- Обновляем и выбираем по указанной Ссылке</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> Справочник.Контрагенты(<span class="color-source-sql-string">'bbb41b6a-768d-11f0-ae5b-bcaec5b7b36a'</span>);
+
+<span class="color-source-sql-comment">-- Обновляем и получаем данные контрагента для каждой строки заказа</span>
+<span class="color-source-sql-keyword">select</span> *
+  <span class="color-source-sql-keyword">from</span> <span class="color-source-sql-keyword">order</span> o
+  <span class="color-source-sql-keyword">cross</span> <span class="color-source-sql-keyword">join</span> Справочник.Контрагенты(o.client_id) 
+
+<span class="color-source-sql-comment">-- Обновляем и используем данные на процедурном языке PL/pgSQL</span>
+<span class="color-source-sql-keyword">do</span> <span class="color-source-sql-block-border">&dollar;&dollar;</span> <span class="color-source-sql-keyword">declare</span> 
+  товар Справочник.Номенклатура;
+<span class="color-source-sql-keyword">begin</span>
+  товар := Справочник.Номенклатура(<span class="color-source-sql-string">'df7d0771-7690-11f0-ae5b-bcaec5b7b36a'</span>);
+<span class="color-source-sql-comment">  -- Далее используем актуальные данные из переменной товар</span>
+<span class="color-source-sql-keyword">end</span> <span class="color-source-sql-block-border">&dollar;&dollar;</span>;
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="refresh_data"></a>
+<p style="font-size:larger;"><b>pg1c.refresh_data</b>(table_1c, server_1c)</p>
+<br>
+Процедура обновляет данные таблицы
+<br>
+<br>
+Параметры:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">table_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Таблица 1С</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">server_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Сервер 1С (необязательный, по умолчанию DEFAULT)</td></tr>
+</table>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 120px;">
+<pre><span class="color-source-sql-comment">-- Обнвляем данные таблицы</span>
+<span class="color-source-sql-keyword">call</span> pg1c.refresh_data(<span class="color-source-sql-string">'Справочник.Товары'</span>);
+
+<span class="color-source-sql-comment">-- Обнвляем данные таблицы для сервера УТ</span>
+<span class="color-source-sql-keyword">select</span> pg1c.create_table_only(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>, <span class="color-source-sql-string">'УТ'</span>);
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="refresh_data_all"></a>
+<p style="font-size:larger;"><b>pg1c.refresh_data_all</b>(server_1c, fast, commit_tables)</p>
+<br>
+Процедура обновляет данные всех таблиц.<br>При быстром обновлении (параметр <em>fast</em>) обновляются таблицы с небольшим количеством строк (условие <em>row_count&lt;fetch_size</em>)
+<br>
+<br>
+Параметры:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">server_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Сервер 1С (необязательный, по умолчанию <em>null</em>, будут обновлены данные для всех серверов)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">fast</td><td style="width: 5px;"></td><td style="white-space: nowrap;">boolean</td><td style="text-align: center; width: 30px;">-</td><td>Быстрое обновление (необязательный, по умолчанию <em>Ложь</em>)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">commit_tables</td><td style="width: 5px;"></td><td style="white-space: nowrap;">int</td><td style="text-align: center; width: 30px;">-</td><td>Количество таблиц, обновляемых в одной транзакции. Значение <em>null</em> отключает промежуточное фиксирование транзакций (необязательный, по умолчанию 1)</td></tr>
+</table>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 120px;">
+<pre><span class="color-source-sql-comment">-- Обнвляем данные таблиц всех серверов</span>
+<span class="color-source-sql-keyword">call</span> pg1c.refresh_data_all();
+
+<span class="color-source-sql-comment">-- Обнвляем данные небольших таблиц для сервера УТ в одной транзакции</span>
+<span class="color-source-sql-keyword">call</span> pg1c.refresh_data_all(<span class="color-source-sql-string">'УТ'</span>, fast=&#62;<span class="color-source-sql-keyword">true</span>, commit_tables=&#62;<span class="color-source-sql-keyword">null</span>);
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="refresh_metadata"></a>
+<p style="font-size:larger;"><b>pg1c.refresh_metadata</b>(table_1c, server_1c, refresh_data)</p>
+<br>
+Процедура обновляет метаданные (структуру таблицы).<br>После внесения некоторых изменений (например, добавлен новый столбец/реквизит) автоматически выполняется обновление данных. Для обновления данных в любом случае необходимо установить параметр <em>refresh_data</em>.<br>Если требуется обновить только метаданные, нужно вызывать функцию <em>pg1c.refresh_metadata_only</em> с аналогичными параметрами и после вызова inout-параметру <em>refresh_data</em> будет присвоена необходимость обновления данных.<br><br>В некоторых случаях на время работы процедуры может потребоваться отключение внешних ключей, во избежание этого рекомендуется создавать внешние ключими отложенными (deferrad)
+<br>
+<br>
+Параметры:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">table_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Таблица 1С</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">server_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Сервер 1С (необязательный, по умолчанию DEFAULT)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">refresh_data</td><td style="width: 5px;"></td><td style="white-space: nowrap;">boolean</td><td style="text-align: center; width: 30px;">-</td><td>Принудительное обновление данных (необязательный, по умолчанию <em>false</em>)</td></tr>
+</table>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 264px;">
+<pre><span class="color-source-sql-comment">-- Обновляем метаданные (структуру таблицы) и данные при необходимости</span>
+<span class="color-source-sql-keyword">call</span> pg1c.refresh_metadata(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>);
+
+<span class="color-source-sql-comment">-- Обновляем метаданные и данные в любом случае</span>
+<span class="color-source-sql-keyword">call</span> pg1c.refresh_metadata(<span class="color-source-sql-string">'Справочник.Товары'</span>, refresh_data=&#62;<span class="color-source-sql-keyword">true</span>);
+
+<span class="color-source-sql-comment">-- Обновляем только метаданные, в переменную v_refresh_data получаем необходимость</span>
+<span class="color-source-sql-comment">-- обновления данных, после выполнения таблица может быть пустой </span>
+<span class="color-source-sql-keyword">do</span> <span class="color-source-sql-block-border">&dollar;&dollar;</span> <span class="color-source-sql-keyword">declare</span> 
+  v_refresh_data <span class="color-source-sql-keyword">boolean</span>;
+<span class="color-source-sql-keyword">begin</span>
+  <span class="color-source-sql-keyword">call</span> pg1c.refresh_metadata_only(<span class="color-source-sql-string">'Справочник.Товары'</span>, refresh_data=&#62;v_refresh_data);
+<span class="color-source-sql-keyword">end</span> <span class="color-source-sql-block-border">&dollar;&dollar;</span>;
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="refresh_all"></a>
+<p style="font-size:larger;"><b>pg1c.refresh_all</b>(server_1c, commit_tables)</p>
+<br>
+Процедура обновляет метаданные и данные всех таблиц
+<br>
+<br>
+Параметры:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">server_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Сервер 1С (необязательный, по умолчанию <em>null</em>, будут обновлены данные для всех серверов)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">commit_tables</td><td style="width: 5px;"></td><td style="white-space: nowrap;">int</td><td style="text-align: center; width: 30px;">-</td><td>Количество таблиц, обновляемых в одной транзакции. Значение <em>null</em> отключает промежуточное фиксирование транзакций (необязательный, по умолчанию 1)</td></tr>
+</table>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 120px;">
+<pre><span class="color-source-sql-comment">-- Обнвляем метаданные и данные таблиц всех серверов</span>
+<span class="color-source-sql-keyword">call</span> pg1c.refresh_data_all();
+
+<span class="color-source-sql-comment">-- Обнвляем метаданные и данные таблиц для сервера УТ в одной транзакции</span>
+<span class="color-source-sql-keyword">select</span> pg1c.refresh_data_all(<span class="color-source-sql-string">'УТ'</span>, commit_tables=&#62;<span class="color-source-sql-keyword">null</span>);
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="drop_table"></a>
+<p style="font-size:larger;"><b>pg1c.drop_table</b>(table_1c, server_1c)</p>
+<br>
+Процедура удаляет в PostgreSQL таблицу 1С, действие обратное к <a href="#create_table">pg1c.create_table</a>.<br>Удаление не каскадное (аналогично <em>drop table restrict</em>), предварительно требуется удалить внешние ключи и использование в представлениях. При отсутствии таблицы будет выдано информационное сообщение, исключения не возникнет (аналогично <em>drop table if not exists</em>)
+<br>
+<br>
+Параметры:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">table_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Таблица 1С</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">server_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Сервер 1С (необязательный, по умолчанию DEFAULT)</td></tr>
+</table>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 120px;">
+<pre><span class="color-source-sql-comment">-- Удаляем таблицу</span>
+<span class="color-source-sql-keyword">call</span> pg1c.drop_table(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>);
+
+<span class="color-source-sql-comment">-- Удаляем таблицу для сервера УТ</span>
+<span class="color-source-sql-keyword">select</span> pg1c.create_table_only(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>, <span class="color-source-sql-string">'УТ'</span>);
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="drop_table_all"></a>
+<p style="font-size:larger;"><b>pg1c.drop_table_all</b>(server_1c, commit_tables)</p>
+<br>
+Процедура удаляет в PostgreSQL все таблицы 1С для указанного сервера.<br>При успешном выполнении в любом случае фиксируется транзакция (<em>commit</em>), необходимо для снятия блокировки с сервера
+<br>
+<br>
+Параметры:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">server_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Сервер 1С (необязательный, по умолчанию DEFAULT)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">commit_tables</td><td style="width: 5px;"></td><td style="white-space: nowrap;">int</td><td style="text-align: center; width: 30px;">-</td><td>Количество таблиц, удаляемых в одной транзакции. Значение <em>null</em> отключает промежуточное фиксирование транзакций (необязательный, по умолчанию 100)</td></tr>
+</table>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 120px;">
+<pre><span class="color-source-sql-comment">-- Удаляем все таблицы для сервера по умолчанию (DEFAULT)</span>
+<span class="color-source-sql-keyword">call</span> pg1c.drop_table_all();
+
+<span class="color-source-sql-comment">-- Удаляем все таблицы для сервера УТ без промежуточного фиксирования транзакций</span>
+<span class="color-source-sql-keyword">call</span> pg1c.drop_table_all(<span class="color-source-sql-string">'УТ'</span>, <span class="color-source-sql-keyword">null</span>);
+</pre>
+</div>
+
+<br>
+<a id="settings"></a>
+<div class="color-menu-item-selected background-menu" style="width: 100%; padding-top: 2px; padding-bottom: 2px;">
+<span style="font-weight: bold; margin-left: 3px; margin-right: 3px;">
+Настройка и информация
+</span>
+</div>
+
+<br>
+<a id="server_1c"></a>
+<p style="font-size:larger;"><b>Таблица pg1с.server_1c</b></p>
+<br>
+Таблица содержит список серверов(публикаций) 1С и информацию для подключения к ним. Для настройки списка серверов необходимо редактировать данную таблицы средствами SQL.<br>Полный доступ к таблице имеет только суперпользователь (postgres), разработчики имеют право читать основные поля.<br><br><b>!</b> Функции, используемые в SQL-выражениях, выполняются с правами создателя (<em>security definer</em>), поэтому во избежание SQL-инъекций они должны быть доступны для модификации только DBA
+<br>
+<br>
+Столбцы:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">id</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Идентификатор</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">web_address</td><td style="width: 5px;"></td><td style="white-space: nowrap;">inet</td><td style="text-align: center; width: 30px;">-</td><td>IP-адрес WEB-сервера 1С</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">web_port</td><td style="width: 5px;"></td><td style="white-space: nowrap;">int</td><td style="text-align: center; width: 30px;">-</td><td>Порт WEB-сервера 1С (по умолчанию 80)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">publication</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Публикация (обычно информационной базы)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">user_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Пользователь 1С</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">password_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Пароль пользователя 1С (не рекомендуется использовать, см. Безопасность)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">auth_expression</td><td style="width: 5px;"></td><td style="white-space: nowrap;">boolean</td><td style="text-align: center; width: 30px;">-</td><td>SQL-выражение для формирования строки авторизации в формате HTTP</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">schema_expression</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>SQL-выражение для формирования схемы таблицы PostgreSQL, переменная $1 содержит тип метаданных 1С</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">owner_expression</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>SQL-выражение для формирования владельца таблицы PostgreSQL (по умолчанию <em>session_user</em>)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">names_pg_short</td><td style="width: 5px;"></td><td style="white-space: nowrap;">boolean</td><td style="text-align: center; width: 30px;">-</td><td>Сокращать имена таблиц,столбцов PostgreSQL (по умолчанию <em>false</em>)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">memory_buffer_mb</td><td style="width: 5px;"></td><td style="white-space: nowrap;">int</td><td style="text-align: center; width: 30px;">-</td><td>Размер буффера памяти при получении данных по протоколу OData, Мб</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">check_updates</td><td style="width: 5px;"></td><td style="white-space: nowrap;">boolean</td><td style="text-align: center; width: 30px;">-</td><td>Проверять обновления PG1C при получении метаданных, выполняется 1 раз в неделю (по умолчанию <em>true</em>)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">check_updates_timestamp</td><td style="width: 5px;"></td><td style="white-space: nowrap;">timestamptz</td><td style="text-align: center; width: 30px;">-</td><td>Дата-время последней проверки обновления PG1C</td></tr>
+</table>
+
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 318px;">
+<pre><span class="color-source-sql-comment">-- Устанавливаем расширение и настраиваем параметры подключения сервера DEFAULT</span>
+<span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">extension</span> pg1c;
+<span class="color-source-sql-keyword">update</span> pg1c.server_1c <span class="color-source-sql-keyword">set</span> web_address=<span class="color-source-sql-string">'192.168.1.10'</span>,<span class="color-source-sql-keyword">publication</span>=<span class="color-source-sql-string">'Acc'</span>,user_1c=<span class="color-source-sql-string">'odata'</span>,password_1c=<span class="color-source-sql-string">'[пароль]'</span>;"
+
+<span class="color-source-sql-comment">-- Получаем URL для проверки в WEB-браузере</span>
+<span class="color-source-sql-keyword">select</span> pg1c.http_url();
+
+<span class="color-source-sql-comment">-- Получаем список серверов (при выполнении в SQL-менеджере можно редактировать)</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.server_1c;
+
+<span class="color-source-sql-comment">-- Добавляем новый сервер УТ</span>
+<span class="color-source-sql-keyword">insert</span> <span class="color-source-sql-keyword">into</span> pg1c.server_1c(id, web_address, <span class="color-source-sql-keyword">publication</span>, user_1c)
+  <span class="color-source-sql-keyword">values</span> (<span class="color-source-sql-string">'УТ'</span>, <span class="color-source-sql-string">'192.168.1.10'</span>, <span class="color-source-sql-string">'TM'</span>, <span class="color-source-sql-string">'Администратор (ФедоровБМ)'</span>);
+
+<span class="color-source-sql-comment">-- Для сервера УТ добавляем префикс "УТ_" к схеме создаваемых таблиц </span>
+<span class="color-source-sql-keyword">update</span> pg1c.server_1c <span class="color-source-sql-keyword">set</span> schema_expression=<span class="color-source-sql-block-border">&dollar;&dollar;</span> <span class="color-source-sql-string">'УТ_'</span>||&dollar;1 <span class="color-source-sql-block-border">&dollar;&dollar;</span> <span class="color-source-sql-keyword">where</span> id=<span class="color-source-sql-string">'УТ'</span>;
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="table"></a>
+<p style="font-size:larger;"><b>Таблица pg1с.table</b></p>
+<br>
+Таблица содержит список таблиц 1С, для которых созданы соответствующие таблицы в PostgreSQL.<br>Допускается только редактировние поля <em>fetch_size</em>. Поля <em>refresh_metadata_timestamp</em> и <em>refresh_data_timestamp</em> записываются при успешном выполнении процедур обновления (например, <a href="#refresh_all">pg1с.refresh_all</a>), независимо от того, были ли изменения в (мета)данных
+<br>
+<br>
+Столбцы:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">server_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Сервер 1С (ссылка на таблицу <a href="#server_1c">pg1с.server_1c</a>)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">name_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Наименование таблицы 1С</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">metadata_type</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Тип метаданных</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">schema</td><td style="width: 5px;"></td><td style="white-space: nowrap;">name</td><td style="text-align: center; width: 30px;">-</td><td>Схема PostgreSQL</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">name_pg</td><td style="width: 5px;"></td><td style="white-space: nowrap;">name</td><td style="text-align: center; width: 30px;">-</td><td>Наименование таблицы в PostgreSQL</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">fetch_size</td><td style="width: 5px;"></td><td style="white-space: nowrap;">int</td><td style="text-align: center; width: 30px;">-</td><td>Количество строк, получаемых за один HTTP-запрос</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">row_count</td><td style="width: 5px;"></td><td style="white-space: nowrap;">int</td><td style="text-align: center; width: 30px;">-</td><td>Количество строк в таблице на момент последнего полного обновления</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">refresh_metadata_timestamp</td><td style="width: 5px;"></td><td style="white-space: nowrap;">timestamptz</td><td style="text-align: center; width: 30px;">-</td><td>Момент последнего обновления метаданных (структуры таблицы)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">refresh_data_timestamp</td><td style="width: 5px;"></td><td style="white-space: nowrap;">timestamptz</td><td style="text-align: center; width: 30px;">-</td><td>Момент последнего обновления данных</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">refresh_data_duration</td><td style="width: 5px;"></td><td style="white-space: nowrap;">interval</td><td style="text-align: center; width: 30px;">-</td><td>Продолжительность последнего обновления данных</td></tr>
+</table>
+
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 300px;">
+<pre><span class="color-source-sql-comment">-- Получаем список всех таблиц 1С</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.<span class="color-source-sql-keyword">table</span>;
+
+<span class="color-source-sql-comment">-- Получаем список всех таблиц 1С для сервера УТ </span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.<span class="color-source-sql-keyword">table</span> <span class="color-source-sql-keyword">where</span> server_1c=<span class="color-source-sql-string">'УТ'</span> <span class="color-source-sql-keyword">order</span> <span class="color-source-sql-keyword">by</span> <span class="color-source-sql-keyword">schema</span>,name_pg;
+
+<span class="color-source-sql-comment">-- Для указанной таблицы устанавливаем кол-во строк, получаемых за один HTTP-запрос</span>
+<span class="color-source-sql-keyword">update</span> pg1c.<span class="color-source-sql-keyword">table</span> <span class="color-source-sql-keyword">set</span> fetch_size=5000 <span class="color-source-sql-keyword">where</span> name_1c=<span class="color-source-sql-string">'Справочник.Контрагенты'</span>;
+
+<span class="color-source-sql-comment">-- Проверяем актуальность данных и метаданных, получая самые ранние моменты обновлния.</span>
+<span class="color-source-sql-comment">-- Рекомендуется использовать для мониторинга процесса обновления по расписанию</span>
+<span class="color-source-sql-keyword">select</span> min(refresh_data_timestamp),min(refresh_metadata_timestamp) <span class="color-source-sql-keyword">from</span> pg1c.<span class="color-source-sql-keyword">table</span>;
+
+<span class="color-source-sql-comment">-- Получаем продолжительность обновления данных всех таблиц</span>
+<span class="color-source-sql-keyword">select</span> sum(refresh_data_duration) <span class="color-source-sql-keyword">from</span> pg1c.<span class="color-source-sql-keyword">table</span>;
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="metadata_tables"></a>
+<p style="font-size:larger;"><b>pg1c.metadata_tables</b>(server_1c)</p>
+<br>
+Функция для указанного сервера возвращает список таблиц 1С, доступных по протоколу OData
+<br>
+<br>
+Параметр:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">server_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Сервер 1С (необязательный, по умолчанию DEFAULT)</td></tr>
+</table>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 210px;">
+<pre><span class="color-source-sql-comment">-- Получаем список доступных таблиц 1С</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.metadata_tables();
+
+<span class="color-source-sql-comment">-- Получаем список доступных таблиц 1С сервера УТ</span>
+<span class="color-source-sql-keyword">select</span> table_1c <span class="color-source-sql-keyword">from</span> pg1c.metadata_tables(<span class="color-source-sql-string">'УТ'</span>) <span class="color-source-sql-keyword">order</span> <span class="color-source-sql-keyword">by</span> 1;
+
+<span class="color-source-sql-comment">-- Получаем список доступных таблиц 1С, которых нет в PostgreSQL</span>
+<span class="color-source-sql-keyword">select</span> * 
+  <span class="color-source-sql-keyword">from</span> pg1c.metadata_tables()
+  <span class="color-source-sql-keyword">where</span> table_1c <span class="color-source-sql-keyword">not</span> <span class="color-source-sql-keyword">in</span> (<span class="color-source-sql-keyword">select</span> name_1c <span class="color-source-sql-keyword">from</span> pg1c.<span class="color-source-sql-keyword">table</span>);
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="http_url"></a>
+<p style="font-size:larger;"><b>pg1c.http_url</b>(urn, server_1c, mask_password)</p>
+<br>
+Функция возвращает URL для получения данных и метаданных по протоколу HTTP, полученное значение можно использовать в адресной строке WEB-браузера.<br>Выполняется с правами вызывающего (<em>security invoker</em>), поэтому должна быть доступна и использоваться только DBA
+<br>
+<br>
+Параметры:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">urn</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Название ресурса OData (необязательный, по умолчанию <em>$metadata</em> - получение метаданных)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">server_1c</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Сервер 1С (необязательный, по умолчанию DEFAULT)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">mask_password</td><td style="width: 5px;"></td><td style="white-space: nowrap;">boolean</td><td style="text-align: center; width: 30px;">-</td><td>Маскировать пароль (необязательный, по умолчанию <em>false</em>)</td></tr>
+</table>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 174px;">
+<pre><span class="color-source-sql-comment">-- Получаем URL для получения метаданных</span>
+<span class="color-source-sql-keyword">select</span> pg1c.http_url();
+
+<span class="color-source-sql-comment">-- Получаем URL для данных таблицы Справочник.Контрагенты сервера УТ</span>
+<span class="color-source-sql-keyword">select</span> pg1c.http_url(<span class="color-source-sql-string">'Catalog_Контрагенты'</span>, <span class="color-source-sql-string">'УТ'</span>);
+
+<span class="color-source-sql-comment">-- Получаем URL для данных конкретной строки (определяется полем Ссылка типа UUID) в формате JSON </span>
+<span class="color-source-sql-keyword">select</span> pg1c.http_url(<span class="color-source-sql-string">'Catalog_Товары'</span>)||<span class="color-source-sql-string">'?&dollar;format=json&&dollar;filter=Ref_Key eq guid'</span><span class="color-source-sql-string">'bbb41b67-768d-11f0-ae5b-bcaec5b7b36a'</span><span class="color-source-sql-string">''</span>;
+</pre>
+</div>
+
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="value_any"></a>
+<p style="font-size:larger;"><b>Тип value_any</b></p>
+<br>
+Тип данных для хранения значений составного типа 1С.<br>Для нормализации значений можно использовать функцию <b>pg1c.value_any</b> с аналогичными параметрами, для значений типа <em>Ссылка</em> указывается имя таблицы 1С
+<br>
+<br>
+Столбцы:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">value</td><td style="width: 5px;"></td><td style="white-space: nowrap;">text</td><td style="text-align: center; width: 30px;">-</td><td>Значение</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">type</td><td style="width: 5px;"></td><td style="white-space: nowrap;">varchar</td><td style="text-align: center; width: 30px;">-</td><td>Тип</td></tr>
+</table>
+
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 336px;">
+<pre><span class="color-source-sql-comment">-- Получение значений составного поля различными способами</span>
+<span class="color-source-sql-keyword">select</span> СоставноеПоле,СоставноеПоле::<span class="color-source-sql-keyword">text</span>,(СоставноеПоле).<span class="color-source-sql-keyword">Value</span>,(СоставноеПоле).<span class="color-source-sql-keyword">Type</span> <span class="color-source-sql-keyword">from</span> Справочник.Товары;
+
+<span class="color-source-sql-comment">-- Получение только ссылок на таблицу Справочник.Контрагенты</span>
+<span class="color-source-sql-keyword">select</span> (СоставноеПоле).<span class="color-source-sql-keyword">value</span>::uuid Ссылка <span class="color-source-sql-keyword">from</span> Справочник.Товары <span class="color-source-sql-keyword">where</span> (СоставноеПоле).<span class="color-source-sql-keyword">Type</span>=<span class="color-source-sql-string">'Справочник.Контрагенты'</span>;
+
+<span class="color-source-sql-comment">-- Создаем значения преобразованием </span>
+<span class="color-source-sql-keyword">select</span> 
+  (123.45,<span class="color-source-sql-string">'numeric'</span>)::pg1c.type_any,
+  (<span class="color-source-sql-string">'bbb41b6a-768d-11f0-ae5b-bcaec5b7b36a'</span>::uuid,<span class="color-source-sql-string">'Справочник.Контрагенты'</span>)::pg1c.type_any;
+
+<span class="color-source-sql-comment">-- Создаем значения различных типов с помошью функции pg1c.value_any</span>
+<span class="color-source-sql-keyword">select</span>
+  pg1c.value_any(<span class="color-source-sql-string">'123.45'</span>,<span class="color-source-sql-string">'Edm.Double'</span>),                                                      -- Число
+  pg1c.value_any(<span class="color-source-sql-string">'bbb41b6a-768d-11f0-ae5b-bcaec5b7b36a'</span>,<span class="color-source-sql-string">'StandardODATA.Catalog_Контрагенты'</span>), -- (Ссылка,Справочник.Контрагенты)
+  pg1c.value_any(<span class="color-source-sql-string">'Зеленый'</span>,<span class="color-source-sql-string">'StandardODATA.Цвет'</span>),                                             -- Перечисление
+  pg1c.value_any(<span class="color-source-sql-string">''</span>,<span class="color-source-sql-string">'StandardODATA.Undefined'</span>)                                                -- Непределенное значение, (<span class="color-source-sql-keyword">null</span>,<span class="color-source-sql-string">'null'</span>) 
+</pre>
+</div>
+
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="version"></a>
+<p style="font-size:larger;"><b>pg1c.version</b></p>
+<br>
+Функция возвращает версию расширения
+<br>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 192px;">
+<pre><span class="color-source-sql-comment">-- Получаем версию расширения</span>
+<span class="color-source-sql-keyword">select</span> pg1c.<span class="color-source-sql-keyword">version</span>();
+
+<span class="color-source-sql-comment">-- Получаем версию и другую информацию о расширении из системного предстваления</span>
+<span class="color-source-sql-keyword">select</span> extversion,* <span class="color-source-sql-keyword">from</span> pg_extension <span class="color-source-sql-keyword">where</span> extname=<span class="color-source-sql-string">'pg1c'</span>;
+
+<span class="color-source-sql-comment">-- Получаем информацию о проверке обновлений (новой версии)</span>
+<span class="color-source-sql-comment">-- При включенной настройке проверка осуществляется при получении метаданных</span>
+<span class="color-source-sql-keyword">select</span> check_updates,check_updates_timestamp <span class="color-source-sql-keyword">from</span> pg1c.server_1c;
+</pre>
+</div>
+
+<br>
+<a id="logs"></a>
+<div class="color-menu-item-selected background-menu" style="width: 100%; padding-top: 2px; padding-bottom: 2px;">
+<span style="font-weight: bold; margin-left: 3px; margin-right: 3px;">
+Журналы
+</span>
+</div>
+
+<br>
+<a id="log_metadata_sql"></a>
+<p style="font-size:larger;"><b>pg1c.log_metadata_sql</b></p>
+<br>
+Все SQL-выражения, изменяющие метаданные, записываются в журнал (лог-таблицу) <em>pg1c.log_metadata_sql</em>.<br>Для записи в журнал исключений необходимо установить SQL-скрипт <em>pg1c_log_exception.sql</em> (подробности в разделе Загрузка).<br>Права на изменение таблицы должен иметь только администратор базы данных (DBA)
+<br>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 228px;">
+<pre><span class="color-source-sql-comment">-- Получаем изменения для таблицы 'Справочник.Контрагенты</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.log_metadata_sql <span class="color-source-sql-keyword">where</span> table_1c=<span class="color-source-sql-string">'Справочник.Контрагенты'</span> <span class="color-source-sql-keyword">order</span> <span class="color-source-sql-keyword">by</span> 1;
+
+<span class="color-source-sql-comment">-- Получаем изменения метаданных за последний час в обратном порядке</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.log_metadata_sql <span class="color-source-sql-keyword">where</span> <span class="color-source-sql-keyword">timestamp</span>&#62;now()-<span class="color-source-sql-keyword">interval</span> <span class="color-source-sql-string">'1 hour'</span> <span class="color-source-sql-keyword">order</span> <span class="color-source-sql-keyword">by</span> 1 <span class="color-source-sql-keyword">desc</span>;
+
+<span class="color-source-sql-comment">-- Удаляем из журнала все записи старше одного месяца</span>
+<span class="color-source-sql-keyword">delete</span> <span class="color-source-sql-keyword">from</span> pg1c.log_metadata_sql <span class="color-source-sql-keyword">where</span> <span class="color-source-sql-keyword">timestamp</span>&#60;now()::date-<span class="color-source-sql-keyword">interval</span> <span class="color-source-sql-string">'1 month'</span>;
+
+<span class="color-source-sql-comment">-- Получаем ошибки (при настроенной записи исключений)</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.log_metadata_sql <span class="color-source-sql-keyword">where</span> <span class="color-source-sql-keyword">exception</span> <span class="color-source-sql-keyword">is</span> <span class="color-source-sql-keyword">not</span> <span class="color-source-sql-keyword">null</span>;
+</pre>
+</div>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="log_http_request"></a>
+<p style="font-size:larger;"><b>pg1c.log_http_request</b></p>
+<br>
+HTTP-запросы по протоколу OData записываются в журнал (лог-таблицу) <em>pg1c.log_http_request</em>.<br>Для записи в журнал исключений необходимо установить SQL-скрипт <em>pg1c_log_exception.sql</em> (подробности в разделе Загрузка).<br>Права на изменение таблицы должен иметь только администратор базы данных (DBA)
+<br>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 228px;">
+<pre><span class="color-source-sql-comment">-- Получаем запросов к серверу УТ</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.log_http_request <span class="color-source-sql-keyword">where</span> server_1c=<span class="color-source-sql-string">'УТ'</span> <span class="color-source-sql-keyword">order</span> <span class="color-source-sql-keyword">by</span> 1;
+
+<span class="color-source-sql-comment">-- Получаем ТОП-10 самый длительных запросов</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.log_http_request <span class="color-source-sql-keyword">order</span> <span class="color-source-sql-keyword">by</span> duration <span class="color-source-sql-keyword">desc</span> <span class="color-source-sql-keyword">limit</span> 10;
+
+<span class="color-source-sql-comment">-- Удаляем из журнала все записи старше одной недели</span>
+<span class="color-source-sql-keyword">delete</span> <span class="color-source-sql-keyword">from</span> pg1c.log_http_request <span class="color-source-sql-keyword">where</span> <span class="color-source-sql-keyword">timestamp</span>&#60;now()::date-<span class="color-source-sql-keyword">interval</span> <span class="color-source-sql-string">'1 week'</span>;
+
+<span class="color-source-sql-comment">-- Получаем ошибки (при настроенной записи исключений)</span>
+<span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.log_http_request <span class="color-source-sql-keyword">where</span> <span class="color-source-sql-keyword">exception</span> <span class="color-source-sql-keyword">is</span> <span class="color-source-sql-keyword">not</span> <span class="color-source-sql-keyword">null</span>;
+</pre>
+</div>
+
+<br>
+
+<a id="security"></a>
+<div class="color-menu-item-selected background-menu" style="width: 100%; padding-top: 2px; padding-bottom: 2px;">
+<span style="font-weight: bold; margin-left: 3px; margin-right: 3px;">
+Безопасность
+</span>
+</div>
+
+<br>
+
+<b>Архитектура</b><br>
+<ul>
+<li>метаданные находятся в схеме <em>pg1c</em> в фиксированных таблицах и меняются хранимыми процедурами с правами создателя-суперпользователя,
+права на данные процедуры выдаются разработчикам и аналитикам
+</li>
+<li>таблицы с данными и функции их обновления <a href="#sp_table">[Таблица]()</a> и <a href="#sp_table_pkey">[Таблица](Ссылка)</a> создаются с правами создателя в схеме таблицы, их владельцем назначается владелец таблицы
+</li>
+<li>владельцы таблицы (разработчики) выдают права на использование своих объектов конечным пользователям</li>
+</ul>
+Иными словами, DBA отвечает за метаданные, разработчик - за данные, пользователю выдаются права на использование данных
+<br><br>
+
+<p><b>Схема</b></p>
+<br>
+<img src="/files/schema/security-schema.png" alt="Схема безопасности" style="min-width: 90%; max-width: 200px;">
+<br><br>
+
+
+
+<b>Ключевые моменты</b><br>
+<ul>
+<li>для изменения структуры таблицы (например, через процедуру <a href="#refresh_metadata">refresh_metadata</a>) пользователь иструмента должен быть её владельцем явно или через назначенную роль
+</li>
+<li>владелец схем и таблиц назначается только при их первоначальном создании, в дальнейшем владельца можно переназначить
+</li>
+<li>при создании таблицы и отсутствии нужной схемы создается новая схема, ее владельцем назначается текущий пользователь.
+Перед созданием таблиц рекомендуется предварительно создавать нужные схемы, по умолчанию это типы объектов конфигурации: <em>Справочник, Константа, Перечисление, Документ</em> и т.д.
+</li>
+<li>редактирование таблиц <a href="#server_1c">pg1c.server_1c</a> и <a href="#table">pg1c.table</a> может выполнять только администратор базы данных (DBA), исключение составляют поля статистики
+</li>
+<li>для выполнения HTTP-запроса функции обновления данных обращаются к функции <em>pg1c.http_request</em>, которая выполняется с правами суперпользователя. Иными словами, владелец таблицы не может выполнять произвольные HTTP-запросы
+</li>
+</ul>
+<br>
+
+<b>!</b> Пароль хранится в открытом в виде в таблице <a href="#server_1c">pg1c.server_1c</a>, поэтому необходимо ограничить доступ к ее столбцу <em>password_1c</em>.
+Более безопасной альтернативой является указание в поле <em>auth_expression</em> SQL-выражения, которое вернет строку авторизации в формате HTTP.
+Например, можно написать функцию, которая доступна только суперпользователю и считывает пароль из файла в директории данных (параметр <em>data_directory</em>). 
+Написание отдельной функции также позволит подключаться к серверу 1С под разными пользователями (например, можно использовать функцию <em>session_user</em> или переменную сессии)
+<br><br>
+
+
+
+
+<br>
+
+
+  </div>
+
+</div>
+
+</body>
+</html>
