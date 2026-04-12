@@ -538,10 +538,10 @@ a, a:link, a:active, a:visited {
 <b>2. Обновление данных и метаданных</b><br>
 Рекомендуется настроить автоматическое обновление данных по расписанию,
 используя хранимые процедуры <a href="#refresh_data_all">refresh_data_all</a> и <a href="#refresh_all">refresh_all</a>.
-При настройке расписания не требуется обеспечивать синхронизацию, т.к. при попытке одновременного выполнения указанных функция для одного сервера 1С возникнет исключение.
+При настройке расписания не требуется обеспечивать синхронизацию, т.к. при попытке одновременного выполнения указанных функций для одного сервера 1С возникнет исключение.
 Для мониторинга обновления можно использовать информационную таблицу <a href="#table">table</a>.
 <br>
-Альтернативно, можно получать актуальные данные непосредствнно в запросе с помощью функций <a href="#sp_table">[Таблица]()</a> и <a href="#sp_table_pkey">[Таблица](Ссылка)</a>.
+Альтернативно, можно получать актуальные данные непосредственно в запросе с помощью функций <a href="#sp_table">[Таблица]()</a> и <a href="#sp_table_pkey">[Таблица](Ссылка)</a>.
 <br><br>
 
 <b>3. Внешние ключи и представления</b><br>
@@ -625,7 +625,7 @@ a, a:link, a:active, a:visited {
 #   в 00:00 создание новых доступных таблиц и полное обновление, включая метаданные
 #   в остальное время полное обновление данных каждый час
 #   рекомендуется для аналитических баз данных
-00 00    * * * psql -d mydb -с "call pg1c.create_table_all(commit_tables=&#62;1)" -c "call pg1c.refresh_all()"
+00 00    * * * psql -d mydb -c "call pg1c.create_table_all(commit_tables=&#62;1)" -c "call pg1c.refresh_all()"
 00 01-23 * * * psql -d mydb -c "call pg1c.refresh_data_all()"
 </pre>
 </div>
@@ -707,7 +707,7 @@ a, a:link, a:active, a:visited {
 <span class="color-source-sql-comment">-- ! Выдача прав на табличную часть (представление) не рекомендуется,</span>
 <span class="color-source-sql-comment">-- т.к. при обновлении метаданных из-за особенностей PostgreSQL </span>
 <span class="color-source-sql-comment">-- может возникнуть исключение</span>
-<span class="color-source-sql-comment">-- Рекомедуется создать функцию, возвращающую запрос, и выдать права на нее</span>
+<span class="color-source-sql-comment">-- Рекомендуется создать функцию, возвращающую запрос, и выдать права на нее</span>
 <span class="color-source-sql-keyword">grant</span> <span class="color-source-sql-keyword">select</span> <span class="color-source-sql-keyword">on</span> Справочник.Контрагенты_КонтактнаяИнформация <span class="color-source-sql-keyword">to</span> user_1;
 </pre>
 </div>
@@ -721,9 +721,9 @@ a, a:link, a:active, a:visited {
 <b>Представления и функции с использованием таблиц</b>
 <br>
 <div class="div-source-code border-color-div-source-code" style="height: 350px;">
-<pre><span class="color-source-sql-comment">-- ! Создание представлений с непосредственным использовнием таблиц не рекомендуется,</span>
+<pre><span class="color-source-sql-comment">-- ! Создание представлений с непосредственным использованием таблиц не рекомендуется,</span>
 <span class="color-source-sql-comment">-- т.к. при обновлении метаданных из-за особенностей PostgreSQL может возникнуть исключение</span>
-<span class="color-source-sql-comment">-- Рекомендуется создавать функции-оберки и использовать их в представлениях, см. ниже</span>
+<span class="color-source-sql-comment">-- Рекомендуется создавать функции-обертки и использовать их в представлениях, см. ниже</span>
 <span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">or</span> <span class="color-source-sql-keyword">replace</span> <span class="color-source-sql-keyword">view</span> myview1 <span class="color-source-sql-keyword">as</span> 
   <span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> Справочник.Товары <span class="color-source-sql-keyword">where</span> <span class="color-source-sql-keyword">not</span> ПометкаУдаления; 
 <span class="color-source-sql-keyword">alter</span> <span class="color-source-sql-keyword">table</span> Справочник.Товары ... ; -- ! Возможно исключение при использовании myview1
@@ -917,11 +917,11 @@ a, a:link, a:active, a:visited {
 <br>
 Примеры использования:<br>
 <div class="div-source-code border-color-div-source-code" style="height: 120px;">
-<pre><span class="color-source-sql-comment">-- Обнвляем данные таблицы</span>
+<pre><span class="color-source-sql-comment">-- Обновляем данные таблицы</span>
 <span class="color-source-sql-keyword">call</span> pg1c.refresh_data(<span class="color-source-sql-string">'Справочник.Товары'</span>);
 
-<span class="color-source-sql-comment">-- Обнвляем данные таблицы для сервера УТ</span>
-<span class="color-source-sql-keyword">select</span> pg1c.create_table_only(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>, <span class="color-source-sql-string">'УТ'</span>);
+<span class="color-source-sql-comment">-- Обновляем данные таблицы для сервера УТ</span>
+<span class="color-source-sql-keyword">call</span> pg1c.refresh_data(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>, <span class="color-source-sql-string">'УТ'</span>);
 </pre>
 </div>
 
@@ -944,10 +944,10 @@ a, a:link, a:active, a:visited {
 <br>
 Примеры использования:<br>
 <div class="div-source-code border-color-div-source-code" style="height: 120px;">
-<pre><span class="color-source-sql-comment">-- Обнвляем данные таблиц всех серверов</span>
+<pre><span class="color-source-sql-comment">-- Обновляем данные таблиц всех серверов</span>
 <span class="color-source-sql-keyword">call</span> pg1c.refresh_data_all();
 
-<span class="color-source-sql-comment">-- Обнвляем данные небольших таблиц для сервера УТ в одной транзакции</span>
+<span class="color-source-sql-comment">-- Обновляем данные небольших таблиц для сервера УТ в одной транзакции</span>
 <span class="color-source-sql-keyword">call</span> pg1c.refresh_data_all(<span class="color-source-sql-string">'УТ'</span>, fast=&#62;<span class="color-source-sql-keyword">true</span>, commit_tables=&#62;<span class="color-source-sql-keyword">null</span>);
 </pre>
 </div>
@@ -959,7 +959,7 @@ a, a:link, a:active, a:visited {
 <a id="refresh_metadata"></a>
 <p style="font-size:larger;"><b>pg1c.refresh_metadata</b>(table_1c, server_1c, refresh_data)</p>
 <br>
-Процедура обновляет метаданные (структуру таблицы).<br>После внесения некоторых изменений (например, добавлен новый столбец/реквизит) автоматически выполняется обновление данных. Для обновления данных в любом случае необходимо установить параметр <em>refresh_data</em>.<br>Если требуется обновить только метаданные, нужно вызывать функцию <em>pg1c.refresh_metadata_only</em> с аналогичными параметрами и после вызова inout-параметру <em>refresh_data</em> будет присвоена необходимость обновления данных.<br><br>В некоторых случаях на время работы процедуры может потребоваться отключение внешних ключей, во избежание этого рекомендуется создавать внешние ключими отложенными (deferrad)
+Процедура обновляет метаданные (структуру таблицы).<br>После внесения некоторых изменений (например, добавлен новый столбец/реквизит) автоматически выполняется обновление данных. Для обновления данных в любом случае необходимо установить параметр <em>refresh_data</em>.<br>Если требуется обновить только метаданные, нужно вызывать функцию <em>pg1c.refresh_metadata_only</em> с аналогичными параметрами и после вызова inout-параметру <em>refresh_data</em> будет присвоена необходимость обновления данных.<br><br>В некоторых случаях на время работы процедуры может потребоваться отключение внешних ключей, во избежание этого рекомендуется создавать внешние ключи отложенными (deferred)
 <br>
 <br>
 Параметры:<br>
@@ -1005,10 +1005,10 @@ a, a:link, a:active, a:visited {
 <br>
 Примеры использования:<br>
 <div class="div-source-code border-color-div-source-code" style="height: 120px;">
-<pre><span class="color-source-sql-comment">-- Обнвляем метаданные и данные таблиц всех серверов</span>
+<pre><span class="color-source-sql-comment">-- Обновляем метаданные и данные таблиц всех серверов</span>
 <span class="color-source-sql-keyword">call</span> pg1c.refresh_data_all();
 
-<span class="color-source-sql-comment">-- Обнвляем метаданные и данные таблиц для сервера УТ в одной транзакции</span>
+<span class="color-source-sql-comment">-- Обновляем метаданные и данные таблиц для сервера УТ в одной транзакции</span>
 <span class="color-source-sql-keyword">select</span> pg1c.refresh_data_all(<span class="color-source-sql-string">'УТ'</span>, commit_tables=&#62;<span class="color-source-sql-keyword">null</span>);
 </pre>
 </div>
@@ -1035,7 +1035,7 @@ a, a:link, a:active, a:visited {
 <span class="color-source-sql-keyword">call</span> pg1c.drop_table(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>);
 
 <span class="color-source-sql-comment">-- Удаляем таблицу для сервера УТ</span>
-<span class="color-source-sql-keyword">select</span> pg1c.create_table_only(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>, <span class="color-source-sql-string">'УТ'</span>);
+<span class="color-source-sql-keyword">call</span> pg1c.drop_table(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>, <span class="color-source-sql-string">'УТ'</span>);
 </pre>
 </div>
 
@@ -1075,7 +1075,7 @@ a, a:link, a:active, a:visited {
 
 <br>
 <a id="server_1c"></a>
-<p style="font-size:larger;"><b>Таблица pg1с.server_1c</b></p>
+<p style="font-size:larger;"><b>Таблица pg1c.server_1c</b></p>
 <br>
 Таблица содержит список серверов(публикаций) 1С и информацию для подключения к ним. Для настройки списка серверов необходимо редактировать данную таблицы средствами SQL.<br>Полный доступ к таблице имеет только суперпользователь (postgres), разработчики имеют право читать основные поля.<br><br><b>!</b> Функции, используемые в SQL-выражениях, выполняются с правами создателя (<em>security definer</em>), поэтому во избежание SQL-инъекций они должны быть доступны для модификации только DBA
 <br>
@@ -1102,9 +1102,9 @@ a, a:link, a:active, a:visited {
 <div class="div-source-code border-color-div-source-code" style="height: 318px;">
 <pre><span class="color-source-sql-comment">-- Устанавливаем расширение и настраиваем параметры подключения сервера DEFAULT</span>
 <span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">extension</span> pg1c;
-<span class="color-source-sql-keyword">update</span> pg1c.server_1c <span class="color-source-sql-keyword">set</span> web_address=<span class="color-source-sql-string">'192.168.1.10'</span>,<span class="color-source-sql-keyword">publication</span>=<span class="color-source-sql-string">'Acc'</span>,user_1c=<span class="color-source-sql-string">'odata'</span>,password_1c=<span class="color-source-sql-string">'[пароль]'</span>;"
+<span class="color-source-sql-keyword">update</span> pg1c.server_1c <span class="color-source-sql-keyword">set</span> web_address=<span class="color-source-sql-string">'192.168.1.10'</span>,<span class="color-source-sql-keyword">publication</span>=<span class="color-source-sql-string">'Acc'</span>,user_1c=<span class="color-source-sql-string">'odata'</span>,password_1c=<span class="color-source-sql-string">'[пароль]'</span>;
 
-<span class="color-source-sql-comment">-- Получаем URL для проверки в WEB-браузере</span>
+<span class="color-source-sql-comment">-- Получаем URL для проверки в браузере</span>
 <span class="color-source-sql-keyword">select</span> pg1c.http_url();
 
 <span class="color-source-sql-comment">-- Получаем список серверов (при выполнении в SQL-менеджере можно редактировать)</span>
@@ -1126,7 +1126,7 @@ a, a:link, a:active, a:visited {
 <a id="table"></a>
 <p style="font-size:larger;"><b>Таблица pg1с.table</b></p>
 <br>
-Таблица содержит список таблиц 1С, для которых созданы соответствующие таблицы в PostgreSQL.<br>Допускается только редактировние поля <em>fetch_size</em>. Поля <em>refresh_metadata_timestamp</em> и <em>refresh_data_timestamp</em> записываются при успешном выполнении процедур обновления (например, <a href="#refresh_all">pg1с.refresh_all</a>), независимо от того, были ли изменения в (мета)данных
+Таблица содержит список таблиц 1С, для которых созданы соответствующие таблицы в PostgreSQL.<br>Допускается только редактирование поля <em>fetch_size</em>. Поля <em>refresh_metadata_timestamp</em> и <em>refresh_data_timestamp</em> записываются при успешном выполнении процедур обновления (например, <a href="#refresh_all">pg1с.refresh_all</a>), независимо от того, были ли изменения в (мета)данных
 <br>
 <br>
 Столбцы:<br>
@@ -1155,7 +1155,7 @@ a, a:link, a:active, a:visited {
 <span class="color-source-sql-comment">-- Для указанной таблицы устанавливаем кол-во строк, получаемых за один HTTP-запрос</span>
 <span class="color-source-sql-keyword">update</span> pg1c.<span class="color-source-sql-keyword">table</span> <span class="color-source-sql-keyword">set</span> fetch_size=5000 <span class="color-source-sql-keyword">where</span> name_1c=<span class="color-source-sql-string">'Справочник.Контрагенты'</span>;
 
-<span class="color-source-sql-comment">-- Проверяем актуальность данных и метаданных, получая самые ранние моменты обновлния.</span>
+<span class="color-source-sql-comment">-- Проверяем актуальность данных и метаданных, получая самые ранние моменты обновления.</span>
 <span class="color-source-sql-comment">-- Рекомендуется использовать для мониторинга процесса обновления по расписанию</span>
 <span class="color-source-sql-keyword">select</span> min(refresh_data_timestamp),min(refresh_metadata_timestamp) <span class="color-source-sql-keyword">from</span> pg1c.<span class="color-source-sql-keyword">table</span>;
 
@@ -1201,7 +1201,7 @@ a, a:link, a:active, a:visited {
 <a id="http_url"></a>
 <p style="font-size:larger;"><b>pg1c.http_url</b>(urn, server_1c, mask_password)</p>
 <br>
-Функция возвращает URL для получения данных и метаданных по протоколу HTTP, полученное значение можно использовать в адресной строке WEB-браузера.<br>Выполняется с правами вызывающего (<em>security invoker</em>), поэтому должна быть доступна и использоваться только DBA
+Функция возвращает URL для получения данных и метаданных по протоколу HTTP, полученное значение можно использовать в адресной строке браузера.<br>Выполняется с правами вызывающего (<em>security invoker</em>), поэтому должна быть доступна и использоваться только DBA
 <br>
 <br>
 Параметры:<br>
@@ -1252,10 +1252,10 @@ a, a:link, a:active, a:visited {
 
 <span class="color-source-sql-comment">-- Создаем значения преобразованием </span>
 <span class="color-source-sql-keyword">select</span> 
-  (123.45,<span class="color-source-sql-string">'numeric'</span>)::pg1c.type_any,
-  (<span class="color-source-sql-string">'bbb41b6a-768d-11f0-ae5b-bcaec5b7b36a'</span>::uuid,<span class="color-source-sql-string">'Справочник.Контрагенты'</span>)::pg1c.type_any;
+  (123.45,<span class="color-source-sql-string">'numeric'</span>)::pg1c.value_any,
+  (<span class="color-source-sql-string">'bbb41b6a-768d-11f0-ae5b-bcaec5b7b36a'</span>::uuid,<span class="color-source-sql-string">'Справочник.Контрагенты'</span>)::pg1c.value_any;
 
-<span class="color-source-sql-comment">-- Создаем значения различных типов с помошью функции pg1c.value_any</span>
+<span class="color-source-sql-comment">-- Создаем значения различных типов с помощью функции pg1c.value_any</span>
 <span class="color-source-sql-keyword">select</span>
   pg1c.value_any(<span class="color-source-sql-string">'123.45'</span>,<span class="color-source-sql-string">'Edm.Double'</span>),                                                      -- Число
   pg1c.value_any(<span class="color-source-sql-string">'bbb41b6a-768d-11f0-ae5b-bcaec5b7b36a'</span>,<span class="color-source-sql-string">'StandardODATA.Catalog_Контрагенты'</span>), -- (Ссылка,Справочник.Контрагенты)
@@ -1280,7 +1280,7 @@ a, a:link, a:active, a:visited {
 <pre><span class="color-source-sql-comment">-- Получаем версию расширения</span>
 <span class="color-source-sql-keyword">select</span> pg1c.<span class="color-source-sql-keyword">version</span>();
 
-<span class="color-source-sql-comment">-- Получаем версию и другую информацию о расширении из системного предстваления</span>
+<span class="color-source-sql-comment">-- Получаем версию и другую информацию о расширении из системного представления</span>
 <span class="color-source-sql-keyword">select</span> extversion,* <span class="color-source-sql-keyword">from</span> pg_extension <span class="color-source-sql-keyword">where</span> extname=<span class="color-source-sql-string">'pg1c'</span>;
 
 <span class="color-source-sql-comment">-- Получаем информацию о проверке обновлений (новой версии)</span>
@@ -1335,7 +1335,7 @@ HTTP-запросы по протоколу OData записываются в ж
 <pre><span class="color-source-sql-comment">-- Получаем запросов к серверу УТ</span>
 <span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.log_http_request <span class="color-source-sql-keyword">where</span> server_1c=<span class="color-source-sql-string">'УТ'</span> <span class="color-source-sql-keyword">order</span> <span class="color-source-sql-keyword">by</span> 1;
 
-<span class="color-source-sql-comment">-- Получаем ТОП-10 самый длительных запросов</span>
+<span class="color-source-sql-comment">-- Получаем ТОП-10 самых длительных запросов</span>
 <span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.log_http_request <span class="color-source-sql-keyword">order</span> <span class="color-source-sql-keyword">by</span> duration <span class="color-source-sql-keyword">desc</span> <span class="color-source-sql-keyword">limit</span> 10;
 
 <span class="color-source-sql-comment">-- Удаляем из журнала все записи старше одной недели</span>
@@ -1378,7 +1378,7 @@ HTTP-запросы по протоколу OData записываются в ж
 
 <b>Ключевые моменты</b><br>
 <ul>
-<li>для изменения структуры таблицы (например, через процедуру <a href="#refresh_metadata">refresh_metadata</a>) пользователь иструмента должен быть её владельцем явно или через назначенную роль
+<li>для изменения структуры таблицы (например, через процедуру <a href="#refresh_metadata">refresh_metadata</a>) пользователь инструмента должен быть её владельцем явно или через назначенную роль
 </li>
 <li>владелец схем и таблиц назначается только при их первоначальном создании, в дальнейшем владельца можно переназначить
 </li>
@@ -1392,7 +1392,7 @@ HTTP-запросы по протоколу OData записываются в ж
 </ul>
 <br>
 
-<b>!</b> Пароль хранится в открытом в виде в таблице <a href="#server_1c">pg1c.server_1c</a>, поэтому необходимо ограничить доступ к ее столбцу <em>password_1c</em>.
+<b>!</b> Пароль хранится в открытом виде в таблице <a href="#server_1c">pg1c.server_1c</a>, поэтому необходимо ограничить доступ к ее столбцу <em>password_1c</em>.
 Более безопасной альтернативой является указание в поле <em>auth_expression</em> SQL-выражения, которое вернет строку авторизации в формате HTTP.
 Например, можно написать функцию, которая доступна только суперпользователю и считывает пароль из файла в директории данных (параметр <em>data_directory</em>). 
 Написание отдельной функции также позволит подключаться к серверу 1С под разными пользователями (например, можно использовать функцию <em>session_user</em> или переменную сессии)

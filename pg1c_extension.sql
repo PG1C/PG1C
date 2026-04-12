@@ -295,8 +295,8 @@ begin
 end; $$;
 
 do $$ begin
-  if to_regtype('pg1c.type_any') is null then
-    create type pg1c.type_any as (
+  if to_regtype('pg1c.value_any') is null then
+    create type pg1c.value_any as (
       value text, 
       type varchar
     );
@@ -306,7 +306,7 @@ end $$;
 create or replace function pg1c.metadata_type_pg(type_1c varchar, column_type boolean) returns varchar language plpgsql as $$
 begin
   return case
-    when column_type                                  then 'pg1c.type_any'
+    when column_type                                  then 'pg1c.value_any'
     when type_1c =    'Edm.Guid'                      then 'uuid'
     when type_1c =    'Edm.Int16'                     then 'int2'
     when type_1c =    'Edm.Int32'                     then 'int4'    
@@ -323,10 +323,10 @@ end; $$;
 
 do $block$ begin
 execute $$
-create or replace function pg1c.value_any(value_1c varchar, type_1c varchar) returns pg1c.type_any language plpgsql security definer as $func$
+create or replace function pg1c.value_any(value_1c varchar, type_1c varchar) returns pg1c.value_any language plpgsql security definer as $func$
 begin
   return case	
-    when value_1c is null or type_1c is null or type_1c='' or type_1c= 'StandardODATA.Undefined' then (null,'null')::pg1c.type_any 
+    when value_1c is null or type_1c is null or type_1c='' or type_1c= 'StandardODATA.Undefined' then (null,'null')::pg1c.value_any 
     else (
       value_1c, 
       case when substring(type_1c,1,14)='StandardODATA.' then
@@ -337,7 +337,7 @@ begin
         end  
       else pg1c.metadata_type_pg(type_1c,false)
       end
-    )::pg1c.type_any
+    )::pg1c.value_any
     end;
 end; $func$;
 $$;
@@ -785,7 +785,7 @@ begin
   return case	
     when metadata_table.type$enum and v_column.name_pg='Порядок' then ' not null unique' 
     --
-    when v_column.type_pg = 'pg1c.type_any' then ' check (substring(('||v_column.name_pg||').type,1,4)!=''Edm.'' and substring(('||v_column.name_pg||').type,1,14)!=''StandardODATA.'')'
+    when v_column.type_pg = 'pg1c.value_any' then ' check (substring(('||v_column.name_pg||').type,1,4)!=''Edm.'' and substring(('||v_column.name_pg||').type,1,14)!=''StandardODATA.'')'
     --
     when v_column.type_pg = 'uuid'      then        case when v_column_pkey then '' else ' check ('||v_column.name_pg||'!=''00000000-0000-0000-0000-000000000000''::uuid)' end
     when v_column.type_pg = 'timestamp' then '(0)'||case when v_column_pkey then '' else ' check ('||v_column.name_pg||'!=''0001-01-01T00:00:00''::timestamp)' end
@@ -802,7 +802,7 @@ declare
   v_value_type  varchar := alias||'.value->>'||quote_literal(name_1c||'_Type'); 
 begin
   return case
-    when type_pg='pg1c.type_any' then  
+    when type_pg='pg1c.value_any' then  
   	  'pg1c.value_any('||v_value_text||','||v_value_type||')'
     when type_pg='uuid' and nullable then
       'case when '||v_value_text||'=''00000000-0000-0000-0000-000000000000'' then null else '||v_value_text||' end::'||type_pg
