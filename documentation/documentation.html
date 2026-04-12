@@ -625,7 +625,7 @@ a, a:link, a:active, a:visited {
 #   в 00:00 создание новых доступных таблиц и полное обновление, включая метаданные
 #   в остальное время полное обновление данных каждый час
 #   рекомендуется для аналитических баз данных
-00 00    * * * psql -d mydb -c "call pg1c.create_table_all(commit_tables=&#62;1)" -c "call pg1c.refresh_all()"
+00 00    * * * psql -d mydb -с "call pg1c.create_table_all(commit_tables=&#62;1)" -c "call pg1c.refresh_all()"
 00 01-23 * * * psql -d mydb -c "call pg1c.refresh_data_all()"
 </pre>
 </div>
@@ -707,7 +707,7 @@ a, a:link, a:active, a:visited {
 <span class="color-source-sql-comment">-- ! Выдача прав на табличную часть (представление) не рекомендуется,</span>
 <span class="color-source-sql-comment">-- т.к. при обновлении метаданных из-за особенностей PostgreSQL </span>
 <span class="color-source-sql-comment">-- может возникнуть исключение</span>
-<span class="color-source-sql-comment">-- Рекомендуется создать функцию, возвращающую запрос, и выдать права на нее</span>
+<span class="color-source-sql-comment">-- Рекомедуется создать функцию, возвращающую запрос, и выдать права на нее</span>
 <span class="color-source-sql-keyword">grant</span> <span class="color-source-sql-keyword">select</span> <span class="color-source-sql-keyword">on</span> Справочник.Контрагенты_КонтактнаяИнформация <span class="color-source-sql-keyword">to</span> user_1;
 </pre>
 </div>
@@ -721,9 +721,9 @@ a, a:link, a:active, a:visited {
 <b>Представления и функции с использованием таблиц</b>
 <br>
 <div class="div-source-code border-color-div-source-code" style="height: 350px;">
-<pre><span class="color-source-sql-comment">-- ! Создание представлений с непосредственным использованием таблиц не рекомендуется,</span>
+<pre><span class="color-source-sql-comment">-- ! Создание представлений с непосредственным использовнием таблиц не рекомендуется,</span>
 <span class="color-source-sql-comment">-- т.к. при обновлении метаданных из-за особенностей PostgreSQL может возникнуть исключение</span>
-<span class="color-source-sql-comment">-- Рекомендуется создавать функции-обертки и использовать их в представлениях, см. ниже</span>
+<span class="color-source-sql-comment">-- Рекомендуется создавать функции-оберки и использовать их в представлениях, см. ниже</span>
 <span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">or</span> <span class="color-source-sql-keyword">replace</span> <span class="color-source-sql-keyword">view</span> myview1 <span class="color-source-sql-keyword">as</span> 
   <span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> Справочник.Товары <span class="color-source-sql-keyword">where</span> <span class="color-source-sql-keyword">not</span> ПометкаУдаления; 
 <span class="color-source-sql-keyword">alter</span> <span class="color-source-sql-keyword">table</span> Справочник.Товары ... ; -- ! Возможно исключение при использовании myview1
