@@ -5,7 +5,7 @@ create extension pg1c;
 update pg1c.server_1c 
   set web_address='192.168.1.10',publication='УТ',user_1c='odata',password_1c='[пароль]';
 
--- Получаем URL к метаданным и проверяем его в WEB-браузере
+-- Получаем URL к метаданным и проверяем его в браузере
 select pg1c.http_url();
 
 -- Создаем таблицу и загружаем данные из 1С
