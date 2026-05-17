@@ -49,8 +49,8 @@ select * from Справочник.Контрагенты();
 
 
 ### Основные процедуры и функции ###
-  
-*   **pg1c.create\_table([таблица\_1С])** - создание в PostgreSQL таблицы аналогичной таблице 1С
+
+*   **[pg1c.create\_table(\[таблица\_1С\])](https://htmlpreview.github.io/?https://github.com/PG1C/PG1C/blob/main/documentation/documentation.html#create_table)** - создание в PostgreSQL таблицы аналогичной таблице 1С
 *   **\[Таблица\_1С\]()** - полностью обновить таблицу и вернуть ее
 *   **pg1c.refresh\_data\_all()** - обновить данные всех созданных таблиц
 
