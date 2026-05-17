@@ -74,8 +74,7 @@ do $$ begin
       type_name varchar,
       root boolean,
       properties pg1c.metadata_xml_entity_type_property[],
-      properties_key varchar[],
-      properties_navigation varchar[]
+      properties_key varchar[]
     );
     create type pg1c.metadata_xml_enum_type as (
       server_1c varchar,    
@@ -523,7 +522,7 @@ begin
   v_metadata_text := regexp_replace(v_metadata_text, '(.*)(<\/Schema>)(.*)',                '\1</Schema>',                 'g');
   v_metadata_text := pg1c.xml_utf8_encode(v_metadata_text);
   insert into pg1c_metadata_xml_entity_type 
-    select server_1c.id,mt.name||'.'||substring(et.name,length(mt.type)+2),et.name,mt.type,mt.name,(rt.name is null),et.properties,et.properties_key,et.properties_navigation
+    select server_1c.id,mt.name||'.'||substring(et.name,length(mt.type)+2),et.name,mt.type,mt.name,(rt.name is null),et.properties,et.properties_key
       from
 	    (select      
             pg1c.xml_utf8_decode((xpath('/EntityType/@Name', xml_et))[1]::varchar) as name,
@@ -534,11 +533,7 @@ begin
             (
               select coalesce(array_agg((pg1c.xml_utf8_decode(name)) order by ordinality),array[]::varchar[]) 
 	            from xmltable('/EntityType/Key/PropertyRef' passing xml_et columns name text path '@Name', ordinality for ordinality)	      
-            ) properties_key,
-            (
-              select coalesce(array_agg((pg1c.xml_utf8_decode(name)) order by ordinality),array[]::varchar[]) 
-	            from xmltable('/EntityType/NavigationProperty' passing xml_et columns name text path '@Name', ordinality for ordinality)	      
-	        ) properties_navigation
+            ) properties_key
           from unnest(xpath('/Schema/EntityType', v_metadata_text::xml)) xml_et) et    
       join pg1c.metadata_type mt on et.name like (mt.type||'\_%') escape '\'
       left join (
@@ -547,7 +542,7 @@ begin
           where type like 'Collection(StandardODATA.%\_RowType)' escape '\'  
       ) rt on rt.name=et.name;
   insert into pg1c_metadata_xml_entity_type 
-    select server_1c.id,mt.name||'.'||substring(ct.name,length(mt.type)+2),ct.name,mt.type,mt.name,false,ct.properties,ct.properties_key,ct.properties_navigation
+    select server_1c.id,mt.name||'.'||substring(ct.name,length(mt.type)+2),ct.name,mt.type,mt.name,false,ct.properties,ct.properties_key
       from
 	    (select      
 	        pg1c.xml_utf8_decode((xpath('/ComplexType/@Name', xml_ct))[1]::varchar) as name,
@@ -558,11 +553,7 @@ begin
             (
               select coalesce(array_agg((pg1c.xml_utf8_decode(name)) order by ordinality),array[]::varchar[]) 
 	            from xmltable('/ComplexType/Key/PropertyRef' passing xml_ct columns name text path '@Name', ordinality for ordinality)	      
-            ) properties_key,
-            (
-              select coalesce(array_agg((pg1c.xml_utf8_decode(name)) order by ordinality),array[]::varchar[]) 
-	            from xmltable('/ComplexType/NavigationProperty' passing xml_ct columns name text path '@Name', ordinality for ordinality)	      
-	        ) properties_navigation
+            ) properties_key
           from unnest(xpath('/Schema/ComplexType', v_metadata_text::xml)) xml_ct) ct    
       join pg1c.metadata_type mt on ct.name like (mt.type||'\_%') escape '\';
   insert into pg1c_metadata_xml_enum_type     
@@ -580,6 +571,21 @@ begin
   analyze pg1c_metadata_xml_enum_type;
   call pg1c.check_updates(server_1c);
 end; $$;
+
+do $block$
+declare
+  v_type varchar;
+begin
+  foreach v_type in array array['text','numeric','uuid'] loop execute $$
+create or replace function pg1c.gin_$$||v_type||$$(anyarray anyelement, column_name name) returns $$||v_type||$$[] language plpgsql immutable as $func$
+declare
+    result $$||v_type||$$[];
+begin
+    execute format('select array(select (unnest(%s::%s)).%I)', quote_literal(anyarray), pg_typeof(anyarray)::text, column_name) into result;
+    return result;
+end; $func$;
+  $$; end loop;
+end; $block$;
 
 create or replace function pg1c.address_pg1c_org() returns bytea as '$libdir/pg1c' language c strict;
 
@@ -665,13 +671,20 @@ begin
     array_agg(
       (
         p.name,
-        p.type,
-        case when p.type='Edm.Binary' and p.name like '%\_Base64Data' escape '\' then
-          substring(p.name,1,length(p.name)-11)
-        when v_metadata_table.type in ('AccountingRegister') and mtc.name_pg is null and coalesce(np.name,p.name) ~ '.[Dr|Cr]$' then
-          substring(coalesce(np.name,p.name), '(.*)..')||case when substring(coalesce(np.name,p.name), '.*(..)')='Dr' then 'Дт' else 'Кт' end 
+        p.type,        
+        case
+          when mtc.name_pg is not null then 
+            mtc.name_pg
+          when v_metadata_table.type in ('AccountingRegister') and p.name ~ '(.*)(Dr|Dr_Key)$' then 
+            regexp_replace(p.name, '(.*)(Dr|Dr_Key)$', '\1Дт')
+          when v_metadata_table.type in ('AccountingRegister') and p.name ~ '(.*)(Cr|Cr_Key)$' then 
+            regexp_replace(p.name, '(.*)(Cr|Cr_Key)$', '\1Кт')
+          when p.type='Edm.Guid' and p.name like '%\_Key' escape '\' then 
+            substring(p.name,1,length(p.name)-4)
+          when p.type='Edm.Binary' and p.name like '%\_Base64Data' escape '\' then 
+            substring(p.name,1,length(p.name)-11)
         else
-          coalesce(mtc.name_pg,np.name,p.name)
+          p.name
         end,  
         null,
         pg1c.metadata_type_pg(p.type, pt.name is not null),
@@ -682,7 +695,6 @@ begin
     )  
     into v_metadata_table.columns  
 	from unnest(v_xml_entity_type.properties) with ordinality p
-	left join unnest(v_xml_entity_type.properties_navigation) np(name) on np.name||'_Key'=p.name
 	left join unnest(v_xml_entity_type.properties) pt on pt.name=p.name||'_Type'
 	left join pg1c.metadata_type_column mtc on mtc.metadata_type=v_metadata_table.type and mtc.name_metadata=p.name
 	where p.name not like '%\_Type' escape '\'
@@ -1315,7 +1327,7 @@ declare
 begin	
   v_xml_enum_type := (select et from pg1c_metadata_xml_enum_type et where et.server_1c=metadata_table.server_1c and et.table_1c=metadata_table.name_1c); 
   if v_xml_enum_type is null then
-    call pg1c.metadata_table_1c_not_found(table_1c);
+    call pg1c.metadata_table_1c_not_found(metadata_table.name_1c);
   end if;
   metadata_table.type := 'Enumeration';
   v_column.name_1c := 'Ссылка'; 
@@ -1336,7 +1348,7 @@ declare
 begin	
   v_xml_enum_type := (select et from pg1c_metadata_xml_enum_type et where et.server_1c=metadata_table.server_1c and et.table_1c=metadata_table.name_1c); 
   if v_xml_enum_type is null then
-    call pg1c.metadata_table_1c_not_found(table_1c);
+    call pg1c.metadata_table_1c_not_found(metadata_table.name_1c);
   end if;
   call pg1c.execute_metadata_sql(metadata_table,
     'lock table '||metadata_table.schema||'.'||metadata_table.name_pg||' in share row exclusive mode'

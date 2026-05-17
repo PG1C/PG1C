@@ -1,13 +1,13 @@
 -- Получаем список доступных таблиц 1С
 select * from pg1c.metadata_tables();
 
--- Создаем таблицу
+-- Создаем таблицу с одинаковым названием
 select pg1c.create_table('Справочник.Контрагенты');
 
 -- Создаем таблицу с другими схемой и названием (public.Goods) в PostgreSQL
 select pg1c.create_table('Справочник.Товары', schema=>'public', table_name_pg=>'Goods');
 
--- Создаем все таблицы
+-- Создаем все доступные таблицы
 call pg1c.create_table_all();
 
 -- Получаем список всех созданных таблиц

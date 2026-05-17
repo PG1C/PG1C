@@ -11,3 +11,4 @@ alter table myorders add foreign key (partner_id)
 -- полное с указанием имени и поля первичного ключа
 alter table myorders add constraint myorders_partner_fk foreign key (partner_id)
   references Справочник.Контрагенты(Ссылка) deferrable initially deferred;
+
