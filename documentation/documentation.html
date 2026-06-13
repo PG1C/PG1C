@@ -25,6 +25,19 @@ body {
     min-height: 100vh;
 }
 
+h2 {
+    font-size: 120%;
+    padding: 5px;
+}
+
+h3 {
+    font-size: 100%;
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+
 div {
     text-align: justify;	
 }
@@ -276,7 +289,7 @@ a, a:link, a:active, a:visited {
 }
 
 .nav-mobile li li {
-	width: 160px;
+    width: 160px;
 }
    
 .nav-mobile > ul > li {
@@ -399,11 +412,11 @@ a, a:link, a:active, a:visited {
 
 @media (max-width: 900px) {
 
-    #header-desktop {
-        display: none;
+    h1 {
+        font-size: 150%; 
     }
 
-    #menu-top-line-1 {
+    .media-desktop {
         display: none;
     }
 
@@ -417,7 +430,7 @@ a, a:link, a:active, a:visited {
     }
 
     .div-video-iframe {
-        width: 370px;
+        width:  370px;
         height: 210px;
     }
 
@@ -425,8 +438,12 @@ a, a:link, a:active, a:visited {
 
 @media not (max-width: 900px) {
 
-    #header-mobile {
+    .media-mobile {
         display: none;
+    }
+
+    #header {
+        min-height: 105px;
     }
 
 }
@@ -449,14 +466,14 @@ a, a:link, a:active, a:visited {
 </style>
 
 
-<title>PG1C | Документация</title>
+<title>PG1C: Доступ к данным 1С из PostgreSQL | Документация</title>
 	
 </head>
 <body>
 
 <div id="header-desktop" class="div-page background-header menu-border-bottom border-color-menu" style="justify-content: center; padding: 10px;">
 
-  <h1>PG1C | Документация</h1>
+  <h1>PG1C: Доступ к данным 1С из PostgreSQL | Документация</h1>
 
 </div>
 
@@ -476,6 +493,7 @@ a, a:link, a:active, a:visited {
 <li><a href="#example-refresh-schedule"> Обновление по расписанию </a></li>
 <li><a href="#example-sql-queries">      SQL-запросы              </a></li>
 <li><a href="#example-foreign-keys">     Внешние ключи            </a></li>
+<li><a href="#example-indexes">          Индексы                  </a></li>
 <li><a href="#example-access">           Доступ                   </a></li>
 <li><a href="#example-views-funcs">      Представления и функции  </a></li>
 </ul>
@@ -494,13 +512,14 @@ a, a:link, a:active, a:visited {
 <li><a href="#drop_table_all">   drop_table_all    </a></li>
 </ul>
 <br>
-<ul style="list-style-type: none;">
+<ul style="list-style-type: none;"> 
 <li style="list-style-type: disc;"><a href="#settings">Настройка и информация</a></li>
 <li><a href="#server_1c">       server_1c       </a></li>
 <li><a href="#table">           table           </a></li>
 <li><a href="#metadata_tables"> metadata_tables </a></li>
 <li><a href="#http_url">        http_url        </a></li> 
 <li><a href="#value_any">       value_any       </a></li>
+<li><a href="#gin_type">        gin_[type]      </a></li>
 <li><a href="#version">         version         </a></li>
 </ul>
 <br>
@@ -524,18 +543,18 @@ a, a:link, a:active, a:visited {
     
 
 <a id="usage_method"></a>
-<p style="font-size:larger;"><b>Принцип использования</b></p>
+<h2>Принцип использования</h2>
 <br>
 Перед использованием необходимо выполнить публикацию информационной базы 1С, разрешить доступ по протоколу OData, 
 установить расширение <em>pg1c</em> и настроить подключение к серверу 1С,
-подробности в разделе <a href="#create_table_all">https://pg1c.org/ru/download/</a><br>
+подробности на странице <a href="https://pg1c.org/ru/download/">Загрузка</a><br>
 <br>
-<b>1. Создание таблиц</b><br>
+<h3>1. Создание таблиц</h3>
 С помощью функций <a href="#create_table">create_table</a> и <a href="#create_table_all">create_table_all</a>
 в базе данных PostgreSQL создаются таблицы, идентичные таблицам 1С (объектам метаданных). 
 <br><br>
 
-<b>2. Обновление данных и метаданных</b><br>
+<h3>2. Обновление данных и метаданных</h3>
 Рекомендуется настроить автоматическое обновление данных по расписанию,
 используя хранимые процедуры <a href="#refresh_data_all">refresh_data_all</a> и <a href="#refresh_all">refresh_all</a>.
 При настройке расписания не требуется обеспечивать синхронизацию, т.к. при попытке одновременного выполнения указанных функций для одного сервера 1С возникнет исключение.
@@ -544,7 +563,7 @@ a, a:link, a:active, a:visited {
 Альтернативно, можно получать актуальные данные непосредственно в запросе с помощью функций <a href="#sp_table">[Таблица]()</a> и <a href="#sp_table_pkey">[Таблица](Ссылка)</a>.
 <br><br>
 
-<b>3. Внешние ключи и представления</b><br>
+<h3>3. Внешние ключи и представления</h3>
 При использовании таблиц 1С (особенно справочников, констант и перечислений) как части общей схемы данных в PostgreSQL, 
 рекомендуется создать внешние ключи на таблицы. 
 Внешние ключи должны быть отложенными (deferred, т.е. проверяться при выполнении commit),
@@ -553,14 +572,15 @@ a, a:link, a:active, a:visited {
 на основе таблиц 1С создавать другие объекты бд: представления, в т.ч. материализованные, партиции, унаследованные таблицы.
 <br><br>
 
-<b>4. Доступ пользователей</b><br>
+<h3>4. Доступ пользователей</h3>
 Пользователям выдаются права на чтение таблиц и выполнение хранимых процедур получения данных.
 <br><br>
-<b>5. Целевое использование</b><br>
+
+<h3>5. Целевое использование</h3>
 см. примеры <a href="#example-sql-queries">SQL-запросы</a>, <a href="#example-access">Доступ</a> и <a href="#example-views-funcs">Представления и функции</a>.
 <br><br>
 
-<b>6. Оптимизация</b><br>
+<h3>6. Оптимизация</h3>
 При длительном выполнении SQL-запросов, использующих таблицы 1С, на необходимые поля требуется создать неуникальные индексы.<br>
 <br>
 
@@ -568,26 +588,25 @@ a, a:link, a:active, a:visited {
 
 <a id="examples"></a>
 <div class="color-menu-item-selected background-menu" style="width: 100%; padding-top: 2px; padding-bottom: 2px;">
-<span style="font-weight: bold; margin-left: 3px; margin-right: 3px;">
+<h2 style="padding: 0px; margin-left: 5px; margin-right: 5px;">
 Примеры
-</span>
+</h2>
 </div>
 
 <br>
 <a id="example-create-tables"></a>
-<b>Создание таблиц различными способами</b>
-<br>
+<h3>Создание таблиц различными способами</h3>
 <div class="div-source-code border-color-div-source-code" style="height: 282px;">
 <pre><span class="color-source-sql-comment">-- Получаем список доступных таблиц 1С</span>
 <span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> pg1c.metadata_tables();
 
-<span class="color-source-sql-comment">-- Создаем таблицу</span>
+<span class="color-source-sql-comment">-- Создаем таблицу с одинаковым названием</span>
 <span class="color-source-sql-keyword">select</span> pg1c.create_table(<span class="color-source-sql-string">'Справочник.Контрагенты'</span>);
 
 <span class="color-source-sql-comment">-- Создаем таблицу с другими схемой и названием (public.Goods) в PostgreSQL</span>
 <span class="color-source-sql-keyword">select</span> pg1c.create_table(<span class="color-source-sql-string">'Справочник.Товары'</span>, <span class="color-source-sql-keyword">schema</span>=&#62;<span class="color-source-sql-string">'public'</span>, table_name_pg=&#62;<span class="color-source-sql-string">'Goods'</span>);
 
-<span class="color-source-sql-comment">-- Создаем все таблицы</span>
+<span class="color-source-sql-comment">-- Создаем все доступные таблицы</span>
 <span class="color-source-sql-keyword">call</span> pg1c.create_table_all();
 
 <span class="color-source-sql-comment">-- Получаем список всех созданных таблиц</span>
@@ -601,8 +620,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="example-refresh-schedule"></a>
-<b>Варианты расписаний обновления данных и метаданных для ОС Linux</b>
-<br>
+<h3>Варианты расписаний обновления данных и метаданных для ОС Linux</h3>
 <div class="div-source-code border-color-div-source-code color-source-shell background-source-shell" style="height: 430px;">
 <pre>postgres@debian:~$ crontab -l
 # Вариант 1
@@ -636,8 +654,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="example-sql-queries"></a>
-<b>SQL-запросы по работе с данными</b>
-<br>
+<h3>SQL-запросы по работе с данными</h3>
 <div class="div-source-code border-color-div-source-code" style="height: 372px;">
 <pre><span class="color-source-sql-comment">-- Выбираем данные из таблицы,</span>
 <span class="color-source-sql-comment">-- обновление данных выполняется отдельно по расписанию </span>
@@ -667,8 +684,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="example-foreign-keys"></a>
-<b>Создание внешних ключей на таблицы, рекомендуется делать отложенными (<em>deferred</em>)</b>
-<br>
+<h3>Создание внешних ключей на таблицы, рекомендуется делать их отложенными (<em>deferred</em>)</h3>
 <div class="div-source-code border-color-div-source-code" style="height: 264px;">
 <pre><span class="color-source-sql-comment">-- Создание ключа в момент создания таблицы</span>
 <span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">table</span> myorders(
@@ -691,9 +707,32 @@ a, a:link, a:active, a:visited {
 <div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
 
 
-<a id="example-access"></a>
-<b>Выдача привилегий на таблицы</b>
+<a id="example-indexes"></a>
+<h3>Создание индексов на обычные столбцы и массивы составного типа (реквизиты объектов конфигурации 1С и их табличных частей)</h3>
+<div class="div-source-code border-color-div-source-code" style="height: 264px;">
+<pre><span class="color-source-sql-comment">-- Создание индекса на обычный реквизит объекта конфигурации </span>
+<span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">index</span> <span class="color-source-sql-keyword">on</span> Справочник.Контрагенты(ИНН);
+
+<span class="color-source-sql-comment">-- Создание индекса на стандартный реквизит</span>
+<span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">index</span> <span class="color-source-sql-keyword">on</span> Справочник.Контрагенты(ИмяПредопределенныхДанных);
+
+<span class="color-source-sql-comment">-- Создание индекса на реквизит табличной части, рекомендуется явно указывать имя   </span>
+<span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">index</span> Контрагенты_КИ_Страна_idx
+  <span class="color-source-sql-keyword">on</span> Справочник.Контрагенты <span class="color-source-sql-keyword">using</span> gin (( pg1c.gin_text(КонтактнаяИнформация,<span class="color-source-sql-string">'Страна'</span>) ));
+<span class="color-source-sql-comment">-- Проверка использования индекса Контрагенты_КИ_Страна_idx в плане запроса</span>
+<span class="color-source-sql-keyword">explain</span> 
+  <span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> Справочник.Контрагенты
+    <span class="color-source-sql-keyword">where</span> pg1c.gin_text(КонтактнаяИнформация,<span class="color-source-sql-string">'Страна'</span>) @&#62; <span class="color-source-sql-keyword">array</span>[<span class="color-source-sql-string">'РОССИЯ'</span>];
+</pre>
+</div>
 <br>
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="example-access"></a>
+<h3>Выдача привилегий на таблицы</h3>
 <div class="div-source-code border-color-div-source-code" style="height: 282px;">
 <pre><span class="color-source-sql-comment">-- Выдача права чтения таблицы пользователю</span>
 <span class="color-source-sql-keyword">grant</span> <span class="color-source-sql-keyword">select</span> <span class="color-source-sql-keyword">on</span> Справочник.Контрагенты <span class="color-source-sql-keyword">to</span> user_1;
@@ -718,8 +757,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="example-views-funcs"></a>
-<b>Представления и функции с использованием таблиц</b>
-<br>
+<h3>Представления и функции с использованием таблиц</h3>
 <div class="div-source-code border-color-div-source-code" style="height: 350px;">
 <pre><span class="color-source-sql-comment">-- ! Создание представлений с непосредственным использовнием таблиц не рекомендуется,</span>
 <span class="color-source-sql-comment">-- т.к. при обновлении метаданных из-за особенностей PostgreSQL может возникнуть исключение</span>
@@ -778,15 +816,14 @@ a, a:link, a:active, a:visited {
 
 <a id="data"></a>
 <div class="color-menu-item-selected background-menu" style="width: 100%; padding-top: 2px; padding-bottom: 2px;">
-<span style="font-weight: bold; margin-left: 3px; margin-right: 3px;">
+<h2 style="padding: 0px; margin-left: 5px; margin-right: 5px;">
 Работа с данными
-</span>
+</h2>
 </div>
 
 <br>
 <a id="create_table"></a>
-<p style="font-size:larger;"><b>pg1c.create_table</b>(table_1c, server_1c, schema, table_name_pg)</p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.create_table</h3><span style="font-size:larger;">(table_1c, server_1c, schema, table_name_pg)</span><br><br>
 Для таблицы 1С функция создает в PostgreSQL таблицу и хранимые процедуры, загружает данные, возвращает полное имя созданной таблицы.<br>Если данные загружать не требуется (например, загрузка выполняется по расписанию), нужно вызывать функцию <em>pg1c.create_table_only</em> с аналогичными параметрами
 <br>
 <br>
@@ -816,8 +853,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="create_table_all"></a>
-<p style="font-size:larger;"><b>pg1c.create_table_all</b>(server_1c, commit_tables)</p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.create_table_all</h3><span style="font-size:larger;">(server_1c, commit_tables)</span><br><br>
 Процедура создает все таблицы, доступные по протоколу OData (результат функции <a href="#metadata_tables">pg1c.metadata_tables</a>).<br>Ранее созданные таблицы пропускаются. При успешном выполнении в любом случае фиксируется транзакция (<em>commit</em>), необходимо для снятия блокировки с сервера
 <br>
 <br>
@@ -845,8 +881,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="sp_table"></a>
-<p style="font-size:larger;"><b>[Таблица]</b>()<b></b></p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">[Таблица]</h3><span style="font-size:larger;">()</span><br><br>
 Функция обновляет все данные в одноименной таблице PostgreSQL из соответствующей таблицы 1С и возвращает их.<br> Иными словами, после успешного выполнения содержимое таблицы в PostgreSQL станет идентичным данным из 1С
 <br>
 <br>
@@ -869,8 +904,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="sp_table_pkey"></a>
-<p style="font-size:larger;"><b>[Таблица]</b>([primary key])</p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">[Таблица]</h3><span style="font-size:larger;">([primary key])</span><br><br>
 Функция обновляет данные по первичному ключу (обычно поле Ссылка) в одноименной таблице PostgreSQL из соответствующей таблицы 1С и возвращает их
 <br>
 <br>
@@ -904,8 +938,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="refresh_data"></a>
-<p style="font-size:larger;"><b>pg1c.refresh_data</b>(table_1c, server_1c)</p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.refresh_data</h3><span style="font-size:larger;">(table_1c, server_1c)</span><br><br>
 Процедура обновляет данные таблицы
 <br>
 <br>
@@ -930,8 +963,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="refresh_data_all"></a>
-<p style="font-size:larger;"><b>pg1c.refresh_data_all</b>(server_1c, fast, commit_tables)</p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.refresh_data_all</h3><span style="font-size:larger;">(server_1c, fast, commit_tables)</span><br><br>
 Процедура обновляет данные всех таблиц.<br>При быстром обновлении (параметр <em>fast</em>) обновляются таблицы с небольшим количеством строк (условие <em>row_count&lt;fetch_size</em>)
 <br>
 <br>
@@ -957,8 +989,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="refresh_metadata"></a>
-<p style="font-size:larger;"><b>pg1c.refresh_metadata</b>(table_1c, server_1c, refresh_data)</p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.refresh_metadata</h3><span style="font-size:larger;">(table_1c, server_1c, refresh_data)</span><br><br>
 Процедура обновляет метаданные (структуру таблицы).<br>После внесения некоторых изменений (например, добавлен новый столбец/реквизит) автоматически выполняется обновление данных. Для обновления данных в любом случае необходимо установить параметр <em>refresh_data</em>.<br>Если требуется обновить только метаданные, нужно вызывать функцию <em>pg1c.refresh_metadata_only</em> с аналогичными параметрами и после вызова inout-параметру <em>refresh_data</em> будет присвоена необходимость обновления данных.<br><br>В некоторых случаях на время работы процедуры может потребоваться отключение внешних ключей, во избежание этого рекомендуется создавать внешние ключи отложенными (deferred)
 <br>
 <br>
@@ -992,8 +1023,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="refresh_all"></a>
-<p style="font-size:larger;"><b>pg1c.refresh_all</b>(server_1c, commit_tables)</p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.refresh_all</h3><span style="font-size:larger;">(server_1c, commit_tables)</span><br><br>
 Процедура обновляет метаданные и данные всех таблиц
 <br>
 <br>
@@ -1018,8 +1048,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="drop_table"></a>
-<p style="font-size:larger;"><b>pg1c.drop_table</b>(table_1c, server_1c)</p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.drop_table</h3><span style="font-size:larger;">(table_1c, server_1c)</span><br><br>
 Процедура удаляет в PostgreSQL таблицу 1С, действие обратное к <a href="#create_table">pg1c.create_table</a>.<br>Удаление не каскадное (аналогично <em>drop table restrict</em>), предварительно требуется удалить внешние ключи и использование в представлениях. При отсутствии таблицы будет выдано информационное сообщение, исключения не возникнет (аналогично <em>drop table if not exists</em>)
 <br>
 <br>
@@ -1044,8 +1073,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="drop_table_all"></a>
-<p style="font-size:larger;"><b>pg1c.drop_table_all</b>(server_1c, commit_tables)</p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.drop_table_all</h3><span style="font-size:larger;">(server_1c, commit_tables)</span><br><br>
 Процедура удаляет в PostgreSQL все таблицы 1С для указанного сервера.<br>При успешном выполнении в любом случае фиксируется транзакция (<em>commit</em>), необходимо для снятия блокировки с сервера
 <br>
 <br>
@@ -1068,15 +1096,14 @@ a, a:link, a:active, a:visited {
 <br>
 <a id="settings"></a>
 <div class="color-menu-item-selected background-menu" style="width: 100%; padding-top: 2px; padding-bottom: 2px;">
-<span style="font-weight: bold; margin-left: 3px; margin-right: 3px;">
+<h2 style="padding: 0px; margin-left: 5px; margin-right: 5px;">
 Настройка и информация
-</span>
+</h2>
 </div>
 
 <br>
 <a id="server_1c"></a>
-<p style="font-size:larger;"><b>Таблица pg1c.server_1c</b></p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">Таблица pg1c.server_1c</h3><br><br>
 Таблица содержит список серверов(публикаций) 1С и информацию для подключения к ним. Для настройки списка серверов необходимо редактировать данную таблицы средствами SQL.<br>Полный доступ к таблице имеет только суперпользователь (postgres), разработчики имеют право читать основные поля.<br><br><b>!</b> Функции, используемые в SQL-выражениях, выполняются с правами создателя (<em>security definer</em>), поэтому во избежание SQL-инъекций они должны быть доступны для модификации только DBA
 <br>
 <br>
@@ -1124,8 +1151,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="table"></a>
-<p style="font-size:larger;"><b>Таблица pg1с.table</b></p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">Таблица pg1с.table</h3><br><br>
 Таблица содержит список таблиц 1С, для которых созданы соответствующие таблицы в PostgreSQL.<br>Допускается только редактирование поля <em>fetch_size</em>. Поля <em>refresh_metadata_timestamp</em> и <em>refresh_data_timestamp</em> записываются при успешном выполнении процедур обновления (например, <a href="#refresh_all">pg1с.refresh_all</a>), независимо от того, были ли изменения в (мета)данных
 <br>
 <br>
@@ -1169,8 +1195,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="metadata_tables"></a>
-<p style="font-size:larger;"><b>pg1c.metadata_tables</b>(server_1c)</p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.metadata_tables</h3><span style="font-size:larger;">(server_1c)</span><br><br>
 Функция для указанного сервера возвращает список таблиц 1С, доступных по протоколу OData
 <br>
 <br>
@@ -1199,8 +1224,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="http_url"></a>
-<p style="font-size:larger;"><b>pg1c.http_url</b>(urn, server_1c, mask_password)</p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.http_url</h3><span style="font-size:larger;">(urn, server_1c, mask_password)</span><br><br>
 Функция возвращает URL для получения данных и метаданных по протоколу HTTP, полученное значение можно использовать в адресной строке браузера.<br>Выполняется с правами вызывающего (<em>security invoker</em>), поэтому должна быть доступна и использоваться только DBA
 <br>
 <br>
@@ -1230,8 +1254,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="value_any"></a>
-<p style="font-size:larger;"><b>Тип value_any</b></p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">Тип pg1c.value_any</h3><br><br>
 Тип данных для хранения значений составного типа 1С.<br>Для нормализации значений можно использовать функцию <b>pg1c.value_any</b> с аналогичными параметрами, для значений типа <em>Ссылка</em> указывается имя таблицы 1С
 <br>
 <br>
@@ -1269,9 +1292,37 @@ a, a:link, a:active, a:visited {
 <div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
 
 
-<a id="version"></a>
-<p style="font-size:larger;"><b>pg1c.version</b></p>
+<a id="gin_type"></a>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.gin_[type]</h3><span style="font-size:larger;">(anyarray, column_name)</span><br><br>
+Функция возвращает массив значений для выбранного поля массива составного типа.<br>Используется при создании gin-индексов для табличных частей объектов конфигурации 1С и в условиях SQL-запросов
 <br>
+<br>
+Параметры:<br>
+<table>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">type</td><td style="width: 5px;"></td><td style="white-space: nowrap;"></td><td style="text-align: center; width: 30px;">-</td><td>Тип данных: <em>text</em>, <em>numeric</em> или <em>uuid</em></td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">anyarray</td><td style="width: 5px;"></td><td style="white-space: nowrap;">anyelement</td><td style="text-align: center; width: 30px;">-</td><td>Массив любого составного типа</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">column_name</td><td style="width: 5px;"></td><td style="white-space: nowrap;">name</td><td style="text-align: center; width: 30px;">-</td><td>Имя поля(столбца), значения которого преобразуются в массив</td></tr>
+</table>
+<br>
+Примеры использования:<br>
+<div class="div-source-code border-color-div-source-code" style="height: 156px;">
+<pre><span class="color-source-sql-comment">-- Создание индекса на реквизит табличной части, рекомендуется явно указывать имя   </span>
+<span class="color-source-sql-keyword">create</span> <span class="color-source-sql-keyword">index</span> Контрагенты_КИ_Страна_idx
+  <span class="color-source-sql-keyword">on</span> Справочник.Контрагенты <span class="color-source-sql-keyword">using</span> gin (( pg1c.gin_text(КонтактнаяИнформация,<span class="color-source-sql-string">'Страна'</span>) ));
+<span class="color-source-sql-comment">-- Проверка использования индекса Контрагенты_КИ_Страна_idx в плане запроса</span>
+<span class="color-source-sql-keyword">explain</span> 
+  <span class="color-source-sql-keyword">select</span> * <span class="color-source-sql-keyword">from</span> Справочник.Контрагенты
+    <span class="color-source-sql-keyword">where</span> pg1c.gin_text(КонтактнаяИнформация,<span class="color-source-sql-string">'Страна'</span>) @&#62; <span class="color-source-sql-keyword">array</span>[<span class="color-source-sql-string">'РОССИЯ'</span>];
+</pre>
+</div>
+
+
+<div style="height: 25px;"></div>
+<div class="background-menu-line" style="width: 100%; height: 2px; padding: 0px; margin-bottom: 15px;"></div>
+
+
+<a id="version"></a>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.version</h3><br><br>
 Функция возвращает версию расширения
 <br>
 <br>
@@ -1292,15 +1343,14 @@ a, a:link, a:active, a:visited {
 <br>
 <a id="logs"></a>
 <div class="color-menu-item-selected background-menu" style="width: 100%; padding-top: 2px; padding-bottom: 2px;">
-<span style="font-weight: bold; margin-left: 3px; margin-right: 3px;">
+<h2 style="padding: 0px; margin-left: 5px; margin-right: 5px;">
 Журналы
-</span>
+</h2>
 </div>
 
 <br>
 <a id="log_metadata_sql"></a>
-<p style="font-size:larger;"><b>pg1c.log_metadata_sql</b></p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.log_metadata_sql</h3><br><br>
 Все SQL-выражения, изменяющие метаданные, записываются в журнал (лог-таблицу) <em>pg1c.log_metadata_sql</em>.<br>Для записи в журнал исключений необходимо установить SQL-скрипт <em>pg1c_log_exception.sql</em> (подробности в разделе Загрузка).<br>Права на изменение таблицы должен иметь только администратор базы данных (DBA)
 <br>
 <br>
@@ -1325,8 +1375,7 @@ a, a:link, a:active, a:visited {
 
 
 <a id="log_http_request"></a>
-<p style="font-size:larger;"><b>pg1c.log_http_request</b></p>
-<br>
+<h3 style="font-size:larger; padding: 5px 0px 5px 5px; display: inline;">pg1c.log_http_request</h3><br><br>
 HTTP-запросы по протоколу OData записываются в журнал (лог-таблицу) <em>pg1c.log_http_request</em>.<br>Для записи в журнал исключений необходимо установить SQL-скрипт <em>pg1c_log_exception.sql</em> (подробности в разделе Загрузка).<br>Права на изменение таблицы должен иметь только администратор базы данных (DBA)
 <br>
 <br>
@@ -1350,14 +1399,14 @@ HTTP-запросы по протоколу OData записываются в ж
 
 <a id="security"></a>
 <div class="color-menu-item-selected background-menu" style="width: 100%; padding-top: 2px; padding-bottom: 2px;">
-<span style="font-weight: bold; margin-left: 3px; margin-right: 3px;">
+<h2 style="padding: 0px; margin-left: 5px; margin-right: 5px;">
 Безопасность
-</span>
+</h2>
 </div>
 
 <br>
 
-<b>Архитектура</b><br>
+<h3>Архитектура</h3>
 <ul>
 <li>метаданные находятся в схеме <em>pg1c</em> в фиксированных таблицах и меняются хранимыми процедурами с правами создателя-суперпользователя,
 права на данные процедуры выдаются разработчикам и аналитикам
@@ -1369,14 +1418,13 @@ HTTP-запросы по протоколу OData записываются в ж
 Иными словами, DBA отвечает за метаданные, разработчик - за данные, пользователю выдаются права на использование данных
 <br><br>
 
-<p><b>Схема</b></p>
+<h3>Схема</h3>
 <br>
 <img src="https://pg1c.org/files/schema/security-schema.png" alt="Схема безопасности" style="min-width: 90%; max-width: 200px;">
 <br><br>
 
 
-
-<b>Ключевые моменты</b><br>
+<h3>Ключевые моменты</h3>
 <ul>
 <li>для изменения структуры таблицы (например, через процедуру <a href="#refresh_metadata">refresh_metadata</a>) пользователь инструмента должен быть её владельцем явно или через назначенную роль
 </li>

@@ -3,9 +3,29 @@
 
 set client_encoding = 'UTF8';
 
+do $block$
+begin
+  if upper(current_setting('server_encoding')) not in ('UTF-8','UTF8') then  
+    raise exception using
+      errcode = 'S8103',
+      message = format('PGSUITE-8103 The PG1C extension only supports UTF8 encoding, the database uses %s encoding', current_setting('server_encoding')),
+      hint    = format('Recreate the database with the command "create database %s with encoding=''UTF8'' template template0;"', current_database());
+  end if;
+end; $block$;
+
+do $block$
+begin
+  execute $$ select xmlelement(name xml, 'supported') $$;
+exception when others then
+  raise exception using
+    errcode = 'S8111',
+    message = 'PGSUITE-8111 This build of PostgreSQL is compiled without XML support; creation of the PG1C extension is not possible',
+    hint    = 'Download the installer from the site https://www.postgresql.org/download/, they support XML';
+end; $block$;
+
 create or replace function pg1c.version() returns varchar language plpgsql as $$
 begin
-  return '25.4';
+  return '26.2';
 end; $$;
 
 create table if not exists pg1c.server_1c(
@@ -447,8 +467,8 @@ begin
     pg1c.http_request(
       host(v_server_1c.web_address)::bytea, 
       v_server_1c.web_port,
-      encode(convert_to(v_auth,'UTF-8'),'base64')::bytea, 
-      convert_to(v_uri, 'UTF-8'), 
+      encode(v_auth::bytea,'base64')::bytea, 
+      v_uri::bytea, 
       content_type::bytea,
       v_server_1c.memory_buffer_mb
     ),
@@ -468,34 +488,6 @@ exception when others then
   call pg1c.log_http_request(v_timestamp,server_1c,urn,format('[%s] %s',sqlstate,sqlerrm));
   raise exception using errcode=sqlstate,message=sqlerrm;
 end; $body$;
-
-do $block$
-declare
-  v_chars char[] := regexp_split_to_array('абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ', '');
-  v_newline char := E'\n';
-begin
-  if upper(current_setting('server_encoding')) in ('UTF-8','UTF8') then  
-     create or replace function pg1c.xml_utf8_encode(xml text) returns text language plpgsql as $$ begin return xml; end; $$;
-     create or replace function pg1c.xml_utf8_decode(xml text) returns text language plpgsql as $$ begin return xml; end; $$;
-     return;
-  end if;	
-  execute $$  
-create or replace function pg1c.xml_utf8_encode(xml text) returns text language plpgsql as $func$
-begin
-  return $$ || 
-    (select string_agg(v_newline||'    replace(', '')||v_newline||'      xml,'||string_agg(v_newline||'      '''||c||''',''#x'||upper(encode(convert_to(c,'UTF-8'),'hex'))||''')', ',') from unnest(v_chars) c)
-  || $$;
-end; $func$
-  $$;
-  execute $$  
-create or replace function pg1c.xml_utf8_decode(xml text) returns text language plpgsql as $func$
-begin
-  return $$ || 
-    (select string_agg(v_newline||'    replace(', '')||v_newline||'      xml,'||string_agg(v_newline||'      ''#x'||upper(encode(convert_to(c,'UTF-8'),'hex'))||''','''||c||''')', ',') from unnest(v_chars) c)
-  || $$;
-end; $func$    
-  $$; 
-end; $block$;
 
 create or replace procedure pg1c.load_metadata_xml(server_1c pg1c.server_1c) language plpgsql as $$
 declare
@@ -520,24 +512,23 @@ begin
   v_metadata_text := pg1c.http_request(server_1c.id, '$metadata', 'application/xml');  
   v_metadata_text := regexp_replace(v_metadata_text, '(.*?)(<edmx:Edmx.*?<Schema.*?>)(.*)', '\1<Schema xmlns:m="void">\3', 'g'); -- remove namespaces
   v_metadata_text := regexp_replace(v_metadata_text, '(.*)(<\/Schema>)(.*)',                '\1</Schema>',                 'g');
-  v_metadata_text := pg1c.xml_utf8_encode(v_metadata_text);
   insert into pg1c_metadata_xml_entity_type 
     select server_1c.id,mt.name||'.'||substring(et.name,length(mt.type)+2),et.name,mt.type,mt.name,(rt.name is null),et.properties,et.properties_key
       from
 	    (select      
-            pg1c.xml_utf8_decode((xpath('/EntityType/@Name', xml_et))[1]::varchar) as name,
+            (xpath('/EntityType/@Name', xml_et))[1]::varchar as name,
             (
-              select coalesce(array_agg((pg1c.xml_utf8_decode(name),type)::pg1c.metadata_xml_entity_type_property order by ordinality),array[]::pg1c.metadata_xml_entity_type_property[]) 
+              select coalesce(array_agg((name,type)::pg1c.metadata_xml_entity_type_property order by ordinality),array[]::pg1c.metadata_xml_entity_type_property[]) 
   	            from xmltable('/EntityType/Property' passing xml_et columns name text path '@Name', type text path '@Type', ordinality for ordinality)	      
 	        ) properties,
             (
-              select coalesce(array_agg((pg1c.xml_utf8_decode(name)) order by ordinality),array[]::varchar[]) 
+              select coalesce(array_agg(name order by ordinality),array[]::varchar[]) 
 	            from xmltable('/EntityType/Key/PropertyRef' passing xml_et columns name text path '@Name', ordinality for ordinality)	      
             ) properties_key
           from unnest(xpath('/Schema/EntityType', v_metadata_text::xml)) xml_et) et    
       join pg1c.metadata_type mt on et.name like (mt.type||'\_%') escape '\'
       left join (
-        select pg1c.xml_utf8_decode(substring(type,26,length(type)-26-8)) as name
+        select substring(type,26,length(type)-26-8) as name
           from xmltable('/Schema/EntityType/Property' passing (v_metadata_text::xml) columns type text path '@Type')
           where type like 'Collection(StandardODATA.%\_RowType)' escape '\'  
       ) rt on rt.name=et.name;
@@ -545,13 +536,13 @@ begin
     select server_1c.id,mt.name||'.'||substring(ct.name,length(mt.type)+2),ct.name,mt.type,mt.name,false,ct.properties,ct.properties_key
       from
 	    (select      
-	        pg1c.xml_utf8_decode((xpath('/ComplexType/@Name', xml_ct))[1]::varchar) as name,
+	        (xpath('/ComplexType/@Name', xml_ct))[1]::varchar as name,
             (
-              select coalesce(array_agg((pg1c.xml_utf8_decode(name),type)::pg1c.metadata_xml_entity_type_property order by ordinality),array[]::pg1c.metadata_xml_entity_type_property[]) 
+              select coalesce(array_agg((name,type)::pg1c.metadata_xml_entity_type_property order by ordinality),array[]::pg1c.metadata_xml_entity_type_property[]) 
   	            from xmltable('/ComplexType/Property' passing xml_ct columns name text path '@Name', type text path '@Type', ordinality for ordinality)	      
 	        ) properties,
             (
-              select coalesce(array_agg((pg1c.xml_utf8_decode(name)) order by ordinality),array[]::varchar[]) 
+              select coalesce(array_agg(name order by ordinality),array[]::varchar[]) 
 	            from xmltable('/ComplexType/Key/PropertyRef' passing xml_ct columns name text path '@Name', ordinality for ordinality)	      
             ) properties_key
           from unnest(xpath('/Schema/ComplexType', v_metadata_text::xml)) xml_ct) ct    
@@ -560,9 +551,9 @@ begin
     select server_1c.id,'Перечисление.'||name,name,members
       from
 	    (select
-	        pg1c.xml_utf8_decode((xpath('/EnumType/@Name', xml_et))[1]::varchar) as name,
+	        (xpath('/EnumType/@Name', xml_et))[1]::varchar as name,
             (
-              select coalesce(array_agg(pg1c.xml_utf8_decode(name::varchar) order by ordinality),array[]::varchar[]) 
+              select coalesce(array_agg(name::varchar order by ordinality),array[]::varchar[]) 
 	            from unnest(xpath('/EnumType/Member/@Name', xml_et)) with ordinality name
 	        ) members
           from unnest(xpath('/Schema/EnumType', v_metadata_text::xml)) xml_et) et
@@ -599,7 +590,7 @@ begin
     return;
   end if; 
   update pg1c.server_1c set check_updates_timestamp=clock_timestamp() where id=check_updates.server_1c.id; 
-  v_address := pg1c.pg1c.address_pg1c_org();
+  v_address := pg1c.address_pg1c_org();
   if v_address is null then return; end if;
   v_response := convert_from(pg1c.http_request(v_address, 80, ''::bytea, '/files/version.txt#PG1C'::bytea, 'text/html'::bytea, 1), 'UTF-8');
   if left(v_response,1)!='0' then return; end if;
