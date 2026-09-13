@@ -1,12 +1,6 @@
--- Устанавливаем расширение 
+-- Устанавливаем расширение и настраиваем доступ к серверу 1С
 create extension pg1c;
-
--- Настраиваем доступ к серверу 1С
-update pg1c.server_1c 
-  set web_address='192.168.1.10',publication='InfoBase',user_1c='odata',password_1c='[пароль]';
-
--- Получаем URL к метаданным и проверяем его в браузере
-select pg1c.http_url();
+update pg1c.server_1c set web_address='192.168.1.10',publication='InfoBase',user_1c='odata';
 
 -- Создаем таблицу и загружаем данные из 1С
 select pg1c.create_table('Справочник.Контрагенты');

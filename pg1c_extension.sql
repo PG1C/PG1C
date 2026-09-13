@@ -25,7 +25,7 @@ end; $block$;
 
 create or replace function pg1c.version() returns varchar language plpgsql as $$
 begin
-  return '26.2';
+  return '26.3';
 end; $$;
 
 create table if not exists pg1c.server_1c(
@@ -35,12 +35,12 @@ create table if not exists pg1c.server_1c(
   publication varchar not null,
   user_1c varchar not null default '',
   password_1c varchar not null default '',
-  auth_expression boolean not null default false,
+  auth_expression varchar not null default '',
   schema_expression varchar not null default '$1',
   owner_expression varchar not null default 'session_user',
   names_pg_short boolean not null default false,
   memory_buffer_mb int not null default greatest(pg_size_bytes(current_setting('maintenance_work_mem'))/1024/1024,32),
-  check_updates boolean default true,
+  check_updates boolean not null default true,
   check_updates_timestamp timestamptz
 );
 
@@ -413,22 +413,15 @@ create table if not exists pg1c.log_http_request(
   exception text
 );
 
-create or replace function pg1c.http_url(urn varchar default '$metadata', server_1c varchar default 'DEFAULT', mask_password boolean default false) returns varchar language plpgsql as $func$
+create or replace function pg1c.http_url(urn varchar default '$metadata', server_1c varchar default 'DEFAULT', auth boolean default true) returns varchar language plpgsql as $func$
 declare
   v_server_1c pg1c.server_1c := pg1c.server_1c(server_1c);
   v_auth varchar;
 begin
-  if mask_password then 
-    v_server_1c.password_1c := '[Пароль]';
-    if v_server_1c.auth_expression then
-       v_server_1c.password_1c := quote_literal(v_server_1c.password_1c); 
-    end if; 
-  end if;
-  if v_server_1c.auth_expression then
-    execute format( $$ select %s||':'||%s||'@' $$,
-                    case when v_server_1c.user_1c!=''     then v_server_1c.user_1c     else $$ '' $$ end,
-                    case when v_server_1c.password_1c!='' then v_server_1c.password_1c else $$ '' $$ end)  
-      into v_auth;
+  if not auth then
+    v_auth := '';
+  elsif coalesce(v_server_1c.auth_expression,'')!='' then
+    execute format( $$ select %s||'@' $$, v_server_1c.auth_expression) into v_auth;
   else
     v_auth := case when v_server_1c.user_1c!='' then v_server_1c.user_1c||':'||v_server_1c.password_1c||'@' else '' end;
   end if;
@@ -441,7 +434,7 @@ begin
     return;
   end if;
   insert into pg1c.log_http_request(timestamp,duration,server_1c,url,transaction_fixed)
-    values (timestamp_,clock_timestamp()-timestamp_,log_http_request.server_1c,pg1c.http_url(urn,log_http_request.server_1c,true),true);	
+    values (timestamp_,clock_timestamp()-timestamp_,log_http_request.server_1c,pg1c.http_url(urn,log_http_request.server_1c,false),true);	
 end; $$;
 
 create or replace function pg1c.http_request(address bytea, port int4, auth bytea, uri bytea, content_type bytea, memory_buffer_mb int4) returns bytea as '$libdir/pg1c' language c strict;
@@ -454,11 +447,8 @@ declare
   v_response text;
   v_timestamp timestamp := clock_timestamp(); 
 begin
-  if v_server_1c.auth_expression then
-    execute format( $$ select %s||':'||%s $$,
-                    case when v_server_1c.user_1c!=''     then v_server_1c.user_1c     else $$ '' $$ end,
-                    case when v_server_1c.password_1c!='' then v_server_1c.password_1c else $$ '' $$ end)  
-      into v_auth;
+  if coalesce(v_server_1c.auth_expression,'')!='' then
+    execute format( $$ select %s $$, v_server_1c.auth_expression) into v_auth;
   else
     v_auth := case when v_server_1c.user_1c!='' then v_server_1c.user_1c||':'||v_server_1c.password_1c else '' end;
   end if;
@@ -486,7 +476,7 @@ begin
   return substring(v_response,3); 
 exception when others then
   call pg1c.log_http_request(v_timestamp,server_1c,urn,format('[%s] %s',sqlstate,sqlerrm));
-  raise exception using errcode=sqlstate,message=sqlerrm;
+  raise;
 end; $body$;
 
 create or replace procedure pg1c.load_metadata_xml(server_1c pg1c.server_1c) language plpgsql as $$

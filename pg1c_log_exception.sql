@@ -53,7 +53,7 @@ create or replace procedure pg1c.log_http_request(timestamp_ timestamptz, server
 declare
   v_log_id bigint;
   v_timestamp varchar := quote_literal(timestamp_::text)||'::timestamptz';
-  v_url varchar := pg1c.http_url(urn,server_1c,true);
+  v_url varchar := pg1c.http_url(urn,server_1c,false);
 begin
   v_log_id := (
     select id from dblink(pg1c.log_dblink(),
